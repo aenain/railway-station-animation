@@ -10,7 +10,7 @@ gem 'haml'
 gem 'sass'
 gem 'coffee-filter'
 
-gem 'delayed_job'
+gem 'delayed_job_active_record'
 gem 'cocaine'
 gem 'yettings'
 
