@@ -4,6 +4,7 @@
   width: 100%
   font-family: 'League Gothic'
   font-size: 24px
+  overflow: hidden
 
 #station
   width: 60%
@@ -82,9 +83,16 @@
     z-index: 4
     overflow: hidden
     font-size: 0.8em
+    -webkit-transition: all 1s ease-in-out // do not change the duration
 
     &.to-left
       left: 20%
+
+      &.arrival
+        left: 100%
+
+      &.departure
+        left: -17em // width of the train + additional em
 
       .locomotive, .units, .units li
         float: left
@@ -101,6 +109,12 @@
 
     &.to-right
       right: 20%
+
+      &.arrival
+        right: 100%
+
+      &.departure
+        right: -17em // width of the train + additional em
 
       .locomotive, .units, .units li
         float: right
