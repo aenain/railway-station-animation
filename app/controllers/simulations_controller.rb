@@ -6,7 +6,7 @@ class SimulationsController < ApplicationController
   def create
     @simulation = Simulation.new(params[:simulation])
     if @simulation.save
-      @simulation.delay.simulate
+      @simulation.simulate
       redirect_to @simulation
     else
       render :new
@@ -17,12 +17,12 @@ class SimulationsController < ApplicationController
     @simulation = Simulation.find(params[:id])
   end
 
-  def simulation_result
+  def result
     @simulation = Simulation.find(params[:id])
     unless @simulation.result.nil?
       render json: @simulation.result.to_json
     else
-      render json: { status: 202, message: 'Simulation is still being computed.' }, status: 202 # still processing
+      render json: { message: 'Simulation is still being computed.' }, status: 202 # still processing
     end
   end
 end

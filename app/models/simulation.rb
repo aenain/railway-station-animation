@@ -78,9 +78,17 @@ class Simulation < ActiveRecord::Base
     end
   end
 
+  def scheduling_algorithm_name
+    SCHEDULING_ALGORITHMS.values.select do |algorithm|
+      algorithm[:value] == scheduling_algorithm
+    end.first.try(:[], :label)
+  end
+
   # calls a simulation program and sends it a json with parameters with pipe, then it expects
   # data to appear on STDOUT (again with the pipe but in the opposite direction).
   def simulate
+    return # program is not ready.
+
     Thread.new do
       program = Yettings.simulation.program
       raw = ""
@@ -98,6 +106,8 @@ class Simulation < ActiveRecord::Base
 
       self.result = JSON.parse(raw)
       self.save
-    end.join
+    end
   end
+  handle_asynchronously :simulate
+
 end
