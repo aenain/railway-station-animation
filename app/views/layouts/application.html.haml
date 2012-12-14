@@ -1,0 +1,20 @@
+!!!
+%html
+  %head
+    %title Railway Station Simulation
+
+    - if content_for? :head
+      = yield :head
+
+    = csrf_meta_tags
+
+  %body
+    %header#header
+      %h1
+        %span Railway Station
+        %span Simulation
+
+    = yield
+
+    %footer
+      Copyright &copy; 2012 Artur Hebda, Jakub Tekiela, Kamil Wajda

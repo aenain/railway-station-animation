@@ -6,7 +6,13 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'
+gem 'haml'
+gem 'sass'
+gem 'coffee-filter'
 
+gem 'delayed_job'
+gem 'cocaine'
+gem 'yettings'
 
 # Gems used only for assets and not required
 # in production environments by default.
