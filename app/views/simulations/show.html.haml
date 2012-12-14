@@ -1,9 +1,10 @@
 - content_for :head do
-  = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome'
+  = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'visualization'
   = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation'
 
 = form_for @simulation do |f|
-  %h2#toggle-settings Show Settings
+  %h2= link_to 'Show Settings', '#', id: 'toggle-settings'
+
   #settings
     = render partial: 'settings', locals: { f: f, read_only: true }
 
@@ -15,13 +16,19 @@
 
     = link_to '', '#', id: 'play', class: 'primary icon-play'
 
+  = render partial: 'visualization'
+
 :coffeescript
   $ ->
     $("#settings").hide()
-    $("#toggle-settings").toggle ->
-      $(this).text("Hide Settings").next().slideDown(1000)
-    , ->
-      $(this).text("Show Settings").next().slideUp(1000)
+    $("#toggle-settings").toggle (event) ->
+      event.preventDefault()
+      $(this).text("Hide Settings")
+      $("#settings").slideDown(1000)
+    , (event) ->
+      event.preventDefault()
+      $(this).text("Show Settings")
+      $("#settings").slideUp(1000)
 
     Simulation.initFields({ disabled: true })
     Simulation.getResult "#{result_simulation_path(@simulation)}",

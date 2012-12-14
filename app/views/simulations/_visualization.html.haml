@@ -1,0 +1,40 @@
+#board
+  %ul.platforms
+    - (1..@simulation.platform_count).reverse_each do |platform_number|
+      %li
+        %div.rail.up{ id: "rail-1-#{platform_number}" }
+        .platform
+          %h2 Platform #{platform_number}
+          %span.icon-user{ id: "platform-#{platform_number}-count" } 0
+        %div.rail.down{ id: "rail-2-#{platform_number}" }
+        .tunnel
+          %span.icon-user{ id: "tunnel-#{platform_number}-count" } 0
+
+  .main-building
+    .info-office
+      %header
+        %h2 Information
+      %ul.desks
+        - (1..@simulation.info_desk_count).reverse_each do |desk_number|
+          %li
+            %span.icon-user{ id: "info-desk-#{desk_number}" } 0
+
+    .corridor
+      .waiting-room
+        %header
+          %h2 Waiting Room
+        %span.icon-user{ id: "waiting-room-count" } 0
+        %span.capacity= @simulation.waiting_room_capacity
+
+      .hall
+        %header
+          %h2 Hall
+        %span.icon-user{ id: "hall-count" } 0
+
+    .cash-office
+      %header
+        %h2 Cash Desks
+      %ul.desks
+        - (1..@simulation.cash_desk_count).reverse_each do |desk_number|
+          %li
+            %span.icon-user{ id: "cash-desk-#{desk_number}" } 0

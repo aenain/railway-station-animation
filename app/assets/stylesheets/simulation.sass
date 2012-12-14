@@ -5,10 +5,7 @@
   font-weight: normal
   font-style: normal
 
-// http://www.colourlovers.com/palette/2054895/Ecru_Brute
-$blue: rgb(31, 184, 208)
-$ecru: rgb(255,242,224)
-$gray: #555 // lighten(rgb(9, 49, 50), 5%)
+@import colors.sass
 
 body
   background-color: $ecru
@@ -83,7 +80,7 @@ footer
 #controls
   height: auto
   width: 27em
-  margin: 2em auto
+  margin: 5em auto
   overflow: hidden
 
   .param
@@ -122,6 +119,15 @@ footer
       padding: 0
       margin: 0
 
+h2
+  font-family: 'League Gothic'
+  text-transform: uppercase
+  text-align: center
+  font-size: 3em
+
+  a
+    color: $blue
+
 #settings
   width: 80%
   max-width: 40em
@@ -129,12 +135,8 @@ footer
   margin: 0 auto
   font-size: 2em
 
-  h2
-    font-family: 'League Gothic'
-    text-transform: uppercase
-
-.train
-  margin: 2em 0
+  .train
+    margin: 2em 0
 
 .params
   &, ul, li
@@ -231,6 +233,10 @@ footer
       border-radius: 50%
       top: -.2em
 
+    &.ui-disabled
+      .ui-slider-handle
+        background-color: $disabledBlue
+
 .actions
   margin-top: 2em
   text-align: center
@@ -243,3 +249,5 @@ footer
     font-size: 4em
     line-height: 1em
     text-transform: uppercase
+
+// board

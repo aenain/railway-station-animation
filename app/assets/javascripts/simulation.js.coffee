@@ -3,12 +3,20 @@ root = exports ? this
 root.Simulation =
   knob:
     colors:
-      normal:
-        bgColor: "rgb(254, 250, 245)"
-        fgColor: "rgb(31, 184, 208)"
-      danger:
-        bgColor: "rgb(254, 250, 245)"
-        fgColor: "rgb(159, 63, 95)"
+      disabled:
+        normal:
+          bgColor: "rgb(254, 250, 245)"
+          fgColor: "rgb(141, 141, 141)"
+        danger:
+          bgColor: "rgb(254, 250, 245)"
+          fgColor: "rgb(141, 141, 141)"
+      enabled:
+        normal:
+          bgColor: "rgb(254, 250, 245)"
+          fgColor: "rgb(31, 184, 208)"
+        danger:
+          bgColor: "rgb(254, 250, 245)"
+          fgColor: "rgb(159, 63, 95)"
     size:
       normal:
         width: 120
@@ -73,11 +81,12 @@ root.Simulation =
 
   _initKnob: (options) ->
     knob = Simulation.knob
+    colors = if options.disabled then knob.colors.disabled else knob.colors.enabled
 
-    $(".knob").knob $.extend({ readOnly: options.disabled }, knob.size.normal, knob.colors.normal)
-    $(".knob-danger").knob $.extend({ readOnly: options.disabled }, knob.size.normal, knob.colors.danger)
-    $(".knob-big").knob $.extend({ readOnly: options.disabled }, knob.size.big, knob.colors.normal)
-    $(".knob-enabled").knob $.extend({ readOnly: false }, knob.size.normal, knob.colors.normal)
+    $(".knob").knob $.extend({ readOnly: options.disabled }, knob.size.normal, colors.normal)
+    $(".knob-danger").knob $.extend({ readOnly: options.disabled }, knob.size.normal, colors.danger)
+    $(".knob-big").knob $.extend({ readOnly: options.disabled }, knob.size.big, colors.normal)
+    $(".knob-enabled").knob $.extend({ readOnly: false }, knob.size.normal, knob.colors.enabled.normal)
 
   _initLabelRangeWithFields: (rangeName, rangeOptions, prefix) ->
     $range = $("#" + rangeName)
