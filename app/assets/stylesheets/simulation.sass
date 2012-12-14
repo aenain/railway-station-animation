@@ -1,0 +1,245 @@
+@font-face
+  font-family: 'League Gothic'
+  src: url('/assets/leaguegothic-regular-webfont.eot')
+  src: url('/assets/leaguegothic-regular-webfont.eot?#iefix') format('embedded-opentype'), url('/assets/leaguegothic-regular-webfont.woff') format('woff'), url('/assets/leaguegothic-regular-webfont.ttf') format('truetype'), url('/assets/leaguegothic-regular-webfont.svg#league_gothicregular') format('svg')
+  font-weight: normal
+  font-style: normal
+
+// http://www.colourlovers.com/palette/2054895/Ecru_Brute
+$blue: rgb(31, 184, 208)
+$ecru: rgb(255,242,224)
+$gray: #555 // lighten(rgb(9, 49, 50), 5%)
+
+body
+  background-color: $ecru
+
+*
+  outline: none
+
+a
+  text-decoration: none
+
+.primary
+  border: 1px solid darken($blue, 10%)
+  color: $ecru
+  background-color: $blue
+  font-family: 'League Gothic'
+  text-shadow: -1px -1px 0 darken($blue, 10%)
+  -webkit-transition: background-color 0.5s ease-in-out
+  cursor: pointer
+
+  &:hover
+    background-color: darken($blue, 5%)
+
+.nowrap
+  white-space: nowrap
+
+footer
+  background-color: $gray
+  text-align: center
+  padding: 1em
+  color: $ecru
+  font-family: 'League Gothic'
+  font-size: 1.5em
+  margin-top: 2em
+
+#header
+  width: 100%
+  height: 250px
+  background: $blue url('/assets/top-background.png') repeat-x
+  text-align: center
+  border-bottom: 10px solid $gray
+
+  h1
+    height: 6.27em
+    display: inline-block
+    font-family: 'Bauhaus 93'
+    color: $ecru
+    font-size: 1.5em
+    border: 1px solid $ecru
+    border-width: 10px 0
+    margin-top: 1.7em
+    padding: 0
+
+    span
+      display: block
+      text-transform: uppercase
+      font-size: 3em
+      line-height: 1em
+      letter-spacing: -0.02em
+      margin: 0 auto
+      padding: 0
+      text-align: center
+
+
+
+      &:last-child
+        position: relative
+        top: -0.17em
+        font-size: 4.3em
+        letter-spacing: 0
+        text-indent: 0.03em
+
+#controls
+  height: auto
+  width: 27em
+  margin: 2em auto
+  overflow: hidden
+
+  .param
+    display: table
+    overflow: hidden
+    margin: 0 auto
+    float: left
+
+    .label, .value, .icon-play
+      display: table-cell
+      vertical-align: middle
+
+    .label
+      font-family: 'League Gothic'
+      font-size: 2.5em
+      padding-right: 0.5em
+      color: $gray
+
+  #play
+    width: 1em
+    height: 1em
+    padding: 0.5em 0.43em 0.5em 0.57em
+    top: 0.25em
+    margin-left: 0.4em
+    border-radius: 50%
+    background-color: $blue
+    font-size: 3em
+    color: $ecru
+    float: left
+    position: relative
+
+    &:before
+      display: block
+      line-height: 1.25em
+      text-align: center
+      padding: 0
+      margin: 0
+
+#settings
+  width: 80%
+  max-width: 40em
+  min-width: 25em
+  margin: 0 auto
+  font-size: 2em
+
+  h2
+    font-family: 'League Gothic'
+    text-transform: uppercase
+
+.train
+  margin: 2em 0
+
+.params
+  &, ul, li
+    margin: 0
+    padding: 0
+    list-style: none
+
+  li
+    margin: 1em auto 0
+    text-align: center
+
+    .before
+      padding-bottom: 0.5em
+
+    .after
+      padding-top: 0.2em
+
+  .label, .param
+    font-family: 'League Gothic'
+    font-size: 1em
+    color: $gray
+    text-align: center
+    line-height: 1em
+    letter-spacing: -1px
+
+    .value
+      color: $blue
+
+  input.value
+    -webkit-appearance: none
+    border: 0
+    display: inline
+    font-family: inherit
+    font-size: inherit
+    font-style: inherit
+    font-weight: inherit
+    text-align: center
+    background: transparent
+    color: $blue
+    width: 1.2em
+
+  .slider + .label
+    margin-top: 0.8em
+
+  .group
+    width: 100%
+    padding: 0.5em 0
+    
+    ul
+      width: 100%
+      display: table
+
+      &.params-2
+        width: 60%
+        margin: 0 auto
+
+        & > *
+          width: 50%
+
+      &.params-4
+        width: 100%
+
+        & > *
+          width: 25%
+
+      &.params-3
+        width: 80%
+        margin: 0 auto
+
+        & > *
+          width: 33.33333333%
+
+      li
+        display: table-cell
+        vertical-align: middle
+
+        .param
+          max-width: 8em
+          margin: 0 auto
+
+  .slider
+    width: 100%
+    height: 0.8em
+    background-color: rgba(255, 255, 255, 0.7)
+    border-radius: 0.5em
+    margin: 0.3em auto
+
+    .ui-slider-range
+      height: 100%
+      background-color: $gray
+
+    .ui-slider-handle
+      background-color: $blue
+      border-radius: 50%
+      top: -.2em
+
+.actions
+  margin-top: 2em
+  text-align: center
+
+  .primary
+    -webkit-appearance: none
+    margin: 0 auto
+    padding: 0.3em 2em
+    border-radius: 0.1em
+    font-size: 4em
+    line-height: 1em
+    text-transform: uppercase

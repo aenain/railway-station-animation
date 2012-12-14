@@ -1,4 +1,10 @@
 RailwayStation::Application.routes.draw do
+  resources :simulations, only: [:new, :create, :show] do
+    member do
+      get :simulation_result
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
