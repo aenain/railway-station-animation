@@ -1,12 +1,30 @@
+- content_for :head do
+  = javascript_include_tag 'underscore-min', 'visualization'
+
 #board
+  #communication
+    .actions
+      = link_to "Don't show up messages", '#'
+    %ul#messages
+
   %ul.platforms
     - (1..@simulation.platform_count).reverse_each do |platform_number|
       %li
-        %div.rail.up{ id: "rail-1-#{platform_number}" }
+        .rail.up{ id: "rail-#{platform_number}-1" }
+          .waiting-trains.none{ id: "rail-#{platform_number}-1-waiting" }
+            .icon
+            %span{ id: "rail-#{platform_number}-1-waiting-count" } 1
+          .total-delay.none{ id: "rail-#{platform_number}-1-delay" }
+            %span.total{ id: "rail-#{platform_number}-1-total-delay" } 30
+            %span.external{ id: "rail-#{platform_number}-1-external-delay" } 24
         .platform
           %h2 Platform #{platform_number}
           %span.icon-user{ id: "platform-#{platform_number}-count" } 0
-        %div.rail.down{ id: "rail-2-#{platform_number}" }
+        .rail.down{ id: "rail-#{platform_number}-2" }
+          .waiting-trains.none{ id: "rail-#{platform_number}-2-waiting" }
+            .icon
+            %span{ id: "rail-#{platform_number}-2-waiting-count" } 2
+          .total-delay{ id: "rail-#{platform_number}-2-delay" }
         .tunnel
           %span.icon-user{ id: "tunnel-#{platform_number}-count" } 0
 
@@ -17,7 +35,7 @@
       %ul.desks
         - (1..@simulation.info_desk_count).reverse_each do |desk_number|
           %li
-            %span.icon-user{ id: "info-desk-#{desk_number}" } 0
+            %span.icon-user{ id: "info-desk-#{desk_number}-count" } 0
 
     .corridor
       .waiting-room
@@ -37,4 +55,80 @@
       %ul.desks
         - (1..@simulation.cash_desk_count).reverse_each do |desk_number|
           %li
-            %span.icon-user{ id: "cash-desk-#{desk_number}" } 0
+            %span.icon-user{ id: "cash-desk-#{desk_number}-count" } 0
+
+:coffeescript
+  $ ->
+    trainTemplate = _.template('<div class="train arrival to-<%= direction %>" id="train-<%= id %>"><header class="locomotive"><h3><span class="to"><%= to %></span><span class="from"><%= from %></h3></header><ul class="units"><li><span class="icon-user"><%= count %></span></li></ul></div>')
+    delayedTrainTemplate = _.template('<div class="train delayed arrival to-<%= direction %>" id="train-<%= id %>"><header class="locomotive"><h3><span class="to"><%= to %></span><span class="from"><%= from %></h3></header><ul class="units"><li><span class="icon-user"><%= count %></span></li></ul></div>')
+
+    messageTemplate = _.template('<li><span class="train"><%= scheduledAt %> | <%= from %> to <%= to %></span><% if(!!delay) { %><span class="delay"><%= delay %></span><% } %><span class="platform"><span class="new"><%= platform.new %></span><% if(platform.new != platform.old) { %><span class="old"><%= platform.old %></span><% } %></span></li>')
+
+    # from, to, count, direction (left|right)
+    buildTrain = (options) ->
+      $train = $(trainTemplate(options))
+      $train.css("webkitTransitionDuration", '2s')
+      $train.appendTo($("#rail-" + options.platform + "-" + options.rail))
+      # workaround to start a css transition
+      setTimeout ->
+        $train.removeClass("arrival")
+      , 1
+
+      setTimeout ->
+        $train.addClass("departure")
+        setTimeout ->
+          $train.remove()
+        , 2000 # duration of the animation
+      , 4000
+
+    buildDelayedTrain = (options) ->
+      $train = $(delayedTrainTemplate(options))
+      $train.css("webkitTransitionDuration", '2s')
+      $train.appendTo($("#rail-" + options.platform + "-" + options.rail))
+      # workaround to start a css transition
+      setTimeout ->
+        $train.removeClass("arrival")
+      , 1
+
+      setTimeout ->
+        $("#rail-" + options.platform + "-" + options.rail + "-waiting").removeClass("none")
+      , 1000
+
+      return
+      setTimeout ->
+        $train.addClass("departure")
+        $("#rail-" + options.platform + "-" + options.rail + "-waiting").addClass("none")
+
+        setTimeout ->
+          $train.remove()
+        , 2000 # duration of the animation
+      , 4000
+
+    buildTrain({
+      id: 1
+      platform: 15
+      rail: 2
+      from: 'Cairo'
+      to: 'Lviv'
+      count: 534
+      direction: 'right'
+    })
+
+    buildDelayedTrain({
+      id: 2
+      platform: 15
+      rail: 1
+      delay: 15
+      from: 'Moscow'
+      to: 'Wroclaw'
+      count: 728
+      direction: 'right'
+    })
+
+    visualization = new Visualization([
+      { "type": "train-arrival", "at": 100 },
+      { "type": "train-departure", "at": 200 },
+      { "type": "people-change", "at": 300 },
+    ], 100)
+
+    visualization.run()
