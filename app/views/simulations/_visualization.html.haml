@@ -4,7 +4,7 @@
 #board
   #communication
     .actions
-      = link_to "Don't show up messages", '#'
+      = link_to "Don't show up messages", '#', id: 'toggle-messages'
     %ul#messages
 
   %ul.platforms
@@ -104,26 +104,46 @@
         , 2000 # duration of the animation
       , 4000
 
-    buildTrain({
-      id: 1
-      platform: 15
-      rail: 2
-      from: 'Cairo'
-      to: 'Lviv'
-      count: 534
-      direction: 'right'
-    })
+    # buildTrain({
+    #   id: 1
+    #   platform: 15
+    #   rail: 2
+    #   from: 'Cairo'
+    #   to: 'Lviv'
+    #   count: 534
+    #   direction: 'right'
+    # })
 
-    buildDelayedTrain({
-      id: 2
-      platform: 15
-      rail: 1
-      delay: 15
-      from: 'Moscow'
-      to: 'Wroclaw'
-      count: 728
-      direction: 'right'
-    })
+    # buildDelayedTrain({
+    #   id: 2
+    #   platform: 15
+    #   rail: 1
+    #   delay: 15
+    #   from: 'Moscow'
+    #   to: 'Wroclaw'
+    #   count: 728
+    #   direction: 'right'
+    # })
+
+    $("#messages").append($(messageTemplate({
+      scheduledAt: "15:30"
+      from: "Kaliningrad"
+      to: "Wladywostok"
+      platform:
+        new: 15
+        old: 12
+      delay:
+        24
+    })))
+
+    $("#toggle-messages").toggle (event) ->
+      event.preventDefault()
+      $(this).text("Show up messages")
+      $("#messages").slideUp()
+    , (event) ->
+      event.preventDefault()
+      $(this).text("Don't show up messages")
+      $("#messages").slideDown()
 
     visualization = new Visualization([
       { "type": "train-arrival", "at": 100 },
@@ -131,4 +151,4 @@
       { "type": "people-change", "at": 300 },
     ], 100)
 
-    visualization.run()
+    # visualization.run()

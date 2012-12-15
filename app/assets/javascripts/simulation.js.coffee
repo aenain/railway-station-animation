@@ -79,6 +79,30 @@ root.Simulation =
           options.success(data) if typeof options.success == "function"
     , 1000
 
+  initSummary: (data) ->
+    @_initSummaryPeople(data)
+    @_initSummaryCashDesks(data)
+    @_initSummaryInformation(data)
+    @_initSummaryTrains(data)
+
+  # allowed precisions: "minutes", "seconds"
+  prettyTime: (seconds, precision) ->
+    formatted = ""
+    if seconds > 3600
+      hours = Math.floor(seconds / 3600)
+      seconds -= hours * 3600
+      formatted += hours + " hours "
+    if precision == "minutes"
+      formatted += Math.round(seconds / 60) + " min "
+    else
+      if seconds > 60
+        minutes = Math.floor(seconds / 60)
+        seconds -= minutes * 60
+        formatted += minutes + " min "
+      if seconds > 0
+        formatted += seconds + " sec"
+    formatted
+
   _initKnob: (options) ->
     knob = Simulation.knob
     colors = if options.disabled then knob.colors.disabled else knob.colors.enabled
@@ -110,3 +134,62 @@ root.Simulation =
     $inputs.each (_, input) ->
       values.push parseFloat(input.value)
     return values
+
+  _initSummaryPeople: (data) ->
+    totalPeople = data.passengers.arriving + data.passengers.departuring + data.companions + data.visitors
+
+    $("#summary").append @_buildSummarySection({
+      title: 'People'
+      data: [
+        { description: 'Arriving passengers', value: data.passengers.arriving },
+        { description: 'Departuring passengers', value: data.passengers.departuring },
+        { description: 'Companions', value: data.companions },
+        { description: 'Visitors', value: data.visitors },
+        { description: 'Total', value: totalPeople }
+      ]
+    })
+
+  _initSummaryCashDesks: (data) ->
+    $("#summary").append @_buildSummarySection({
+      title: 'Cash Desks'
+      data: [
+        { description: 'Sold tickets', value: data.cashDesks.soldTickets },
+        { description: 'Average waiting time', value: @prettyTime(data.cashDesks.averageWaitingTime, "seconds") }
+      ]
+    })
+
+  _initSummaryInformation: (data) ->
+    $("#summary").append @_buildSummarySection({
+      title: 'Information'
+      data: [
+        { description: 'Served informations', value: data.infoDesks.servedInformations },
+        { description: 'Complaints', value: data.infoDesks.complaints },
+        { description: 'Average waiting time', value: @prettyTime(data.infoDesks.averageWaitingTime, "seconds") }
+      ]
+    })
+
+  _initSummaryTrains: (data) ->
+    $("#summary").append @_buildSummarySection({
+      title: 'Trains'
+      data: [
+        { description: 'Average external delay', value: @prettyTime(data.trains.delay.average.external, "minutes") },
+        { description: 'Average semaphore delay', value: @prettyTime(data.trains.delay.average.semaphore, "minutes") },
+        { description: 'Average platform delay', value: @prettyTime(data.trains.delay.average.platform, "minutes") },
+        { description: 'Platform changes', value: data.trains.platformChanges },
+        { description: 'Total', value: data.trains.count }
+      ]
+    })
+
+  _buildSummarySection: (options) ->
+    @summarySection ||= _.template """
+      <div class="container">
+        <h3><%= title %></h3>
+        <table>
+          <% _.each(data, function(row) { %>
+            <tr><td><%= row.description %></td><td><%= row.value %></td></tr>
+          <% }) %>
+        </table>
+      </div>
+    """
+
+    $(@summarySection(options))

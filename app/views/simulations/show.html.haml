@@ -8,7 +8,11 @@
   #settings
     = render partial: 'settings', locals: { f: f, read_only: true }
 
-  #controls
+  - if @simulation.result.nil?
+    #no-result
+      Simulation is still being computed. Please wait...
+
+  #controls{ class: @simulation.result.nil? && "hidden" }
     .param
       .label acceleration
       .value
@@ -17,6 +21,7 @@
     = link_to '', '#', id: 'play', class: 'primary icon-play'
 
   = render partial: 'visualization'
+  = render partial: 'summary'
 
 :coffeescript
   $ ->
@@ -33,6 +38,6 @@
     Simulation.initFields({ disabled: true })
     Simulation.getResult "#{result_simulation_path(@simulation)}",
       success: (data) ->
-        console.log("computed!")
-      process: (data) ->
-        console.log(data.message)
+        Simulation.initSummary(data.summary)
+        $("#no-result").hide()
+        $("#controls, #summary").fadeIn()
