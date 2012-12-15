@@ -35,9 +35,18 @@
       $(this).text("Show Settings")
       $("#settings").slideUp(1000)
 
+    $("#play").click (event) ->
+      event.preventDefault()
+      if !window.visualization && window.simulationEvents
+        window.visualization = new Visualization(window.simulationEvents, parseInt($("#acceleration").val()))
+        window.visualization.run()
+        $("#controls").hide()
+        $("#simulation-time").fadeIn()
+
     Simulation.initFields({ disabled: true })
     Simulation.getResult "#{result_simulation_path(@simulation)}",
       success: (data) ->
         Simulation.initSummary(data.summary)
         $("#no-result").hide()
         $("#controls, #summary").fadeIn()
+        window.simulationEvents = data.events

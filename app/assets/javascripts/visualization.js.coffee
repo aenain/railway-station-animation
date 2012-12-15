@@ -23,6 +23,7 @@ root.Visualization = class Visualization
 
   _process: (now) =>
     @simulationTime = (Date.now() - @start) * @acceleration / 1000.0 # in seconds
+    @_updateClock()
 
     while @events.length > 0 && @events[0].at <= @simulationTime
       event = @events.shift()
@@ -46,11 +47,25 @@ root.Visualization = class Visualization
     $("[id^='cash-desk'], [id^='info-desk'], [id^='platform'], [id^='tunnel'], [id^='rail']").each (_, region) =>
       @objects[region.id] = $(region)
 
-    @objects[id] = $("#" + id) for id in ["waiting-room-count", "hall-count"]
+    @objects[id] = $("#" + id) for id in ["waiting-room-count", "hall-count", "simulation-time"]
     return
 
   _clearCache: ->
     delete @objects
+
+  _updateClock: ->
+    time = @simulationTime
+    hours = Math.floor(time / 3600.0)
+    time -= hours * 3600
+    minutes = Math.floor(time / 60.0)
+    time -= minutes * 60
+    seconds = Math.floor(time)
+
+    hours = "0#{hours}" if hours < 10
+    minutes = "0#{minutes}" if minutes < 10
+    seconds = "0#{seconds}" if seconds < 10
+
+    @objects["simulation-time"].text "#{hours}:#{minutes}:#{seconds}"
 
   _onTrainArrival: (data) ->
     delayed = Math.round((data.delay.external + data.delay.semaphore) / 60.0) > 0
