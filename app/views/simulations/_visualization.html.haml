@@ -1,5 +1,5 @@
 - content_for :head do
-  = javascript_include_tag 'underscore-min', 'visualization'
+  = javascript_include_tag 'underscore-min', 'prefixify', 'visualization'
 
 #board
   #communication
@@ -15,8 +15,8 @@
             .icon
             %span{ id: "rail-#{platform_number}-1-waiting-count" } 1
           .total-delay.none{ id: "rail-#{platform_number}-1-delay" }
-            %span.total{ id: "rail-#{platform_number}-1-total-delay" } 30
-            %span.external{ id: "rail-#{platform_number}-1-external-delay" } 24
+            %span.total{ id: "rail-#{platform_number}-1-delay-total" } 30
+            %span.external{ id: "rail-#{platform_number}-1-delay-external" } 24
         .platform
           %h2 Platform #{platform_number}
           %span.icon-user{ id: "platform-#{platform_number}-count" } 0
@@ -24,7 +24,9 @@
           .waiting-trains.none{ id: "rail-#{platform_number}-2-waiting" }
             .icon
             %span{ id: "rail-#{platform_number}-2-waiting-count" } 2
-          .total-delay{ id: "rail-#{platform_number}-2-delay" }
+          .total-delay.none{ id: "rail-#{platform_number}-2-delay" }
+            %span.total{ id: "rail-#{platform_number}-2-delay-total" } 30
+            %span.external{ id: "rail-#{platform_number}-2-delay-external" } 24
         .tunnel
           %span.icon-user{ id: "tunnel-#{platform_number}-count" } 0
 
@@ -59,83 +61,6 @@
 
 :coffeescript
   $ ->
-    trainTemplate = _.template('<div class="train arrival to-<%= direction %>" id="train-<%= id %>"><header class="locomotive"><h3><span class="to"><%= to %></span><span class="from"><%= from %></h3></header><ul class="units"><li><span class="icon-user"><%= count %></span></li></ul></div>')
-    delayedTrainTemplate = _.template('<div class="train delayed arrival to-<%= direction %>" id="train-<%= id %>"><header class="locomotive"><h3><span class="to"><%= to %></span><span class="from"><%= from %></h3></header><ul class="units"><li><span class="icon-user"><%= count %></span></li></ul></div>')
-
-    messageTemplate = _.template('<li><span class="train"><%= scheduledAt %> | <%= from %> to <%= to %></span><% if(!!delay) { %><span class="delay"><%= delay %></span><% } %><span class="platform"><span class="new"><%= platform.new %></span><% if(platform.new != platform.old) { %><span class="old"><%= platform.old %></span><% } %></span></li>')
-
-    # from, to, count, direction (left|right)
-    buildTrain = (options) ->
-      $train = $(trainTemplate(options))
-      $train.css("webkitTransitionDuration", '2s')
-      $train.appendTo($("#rail-" + options.platform + "-" + options.rail))
-      # workaround to start a css transition
-      setTimeout ->
-        $train.removeClass("arrival")
-      , 1
-
-      setTimeout ->
-        $train.addClass("departure")
-        setTimeout ->
-          $train.remove()
-        , 2000 # duration of the animation
-      , 4000
-
-    buildDelayedTrain = (options) ->
-      $train = $(delayedTrainTemplate(options))
-      $train.css("webkitTransitionDuration", '2s')
-      $train.appendTo($("#rail-" + options.platform + "-" + options.rail))
-      # workaround to start a css transition
-      setTimeout ->
-        $train.removeClass("arrival")
-      , 1
-
-      setTimeout ->
-        $("#rail-" + options.platform + "-" + options.rail + "-waiting").removeClass("none")
-      , 1000
-
-      return
-      setTimeout ->
-        $train.addClass("departure")
-        $("#rail-" + options.platform + "-" + options.rail + "-waiting").addClass("none")
-
-        setTimeout ->
-          $train.remove()
-        , 2000 # duration of the animation
-      , 4000
-
-    # buildTrain({
-    #   id: 1
-    #   platform: 15
-    #   rail: 2
-    #   from: 'Cairo'
-    #   to: 'Lviv'
-    #   count: 534
-    #   direction: 'right'
-    # })
-
-    # buildDelayedTrain({
-    #   id: 2
-    #   platform: 15
-    #   rail: 1
-    #   delay: 15
-    #   from: 'Moscow'
-    #   to: 'Wroclaw'
-    #   count: 728
-    #   direction: 'right'
-    # })
-
-    $("#messages").append($(messageTemplate({
-      scheduledAt: "15:30"
-      from: "Kaliningrad"
-      to: "Wladywostok"
-      platform:
-        new: 15
-        old: 12
-      delay:
-        24
-    })))
-
     $("#toggle-messages").toggle (event) ->
       event.preventDefault()
       $(this).text("Show up messages")
@@ -146,9 +71,79 @@
       $("#messages").slideDown()
 
     visualization = new Visualization([
-      { "type": "train-arrival", "at": 100 },
-      { "type": "train-departure", "at": 200 },
-      { "type": "people-change", "at": 300 },
+      {
+        type: "people-change"
+        at: 0
+        data:
+          region: "platform-15"
+          count: 123
+      },
+      {
+        type: "train-change"
+        at: 50
+        data:
+          scheduledAt: "12:30"
+          from: "Wrocław"
+          to: "Przemyśl"
+          delay: 420
+          platform:
+            new: 15
+            old: 12
+      },
+      {
+        type: "train-semaphore-departure"
+        at: 100
+        data:
+          train: "train-1"
+          from: "Wrocław"
+          to: "Przemyśl"
+          count: 300
+          platform: 15
+          rail: 2
+          duration: 600
+          delay:
+            external: 70
+            semaphore: 0
+      },
+      {
+        type: "waiting-trains-change"
+        at: 200
+        data:
+          platform: 15
+          rail: 1
+          count: 1
+      },
+      {
+        type: "waiting-trains-change"
+        at: 400
+        data:
+          platform: 15
+          rail: 1
+          count: 0
+      },
+      {
+        type: "people-change"
+        at: 700
+        data:
+          region: "train-1"
+          count: 250
+      },
+      {
+        type: "people-change"
+        at: 700
+        data:
+          region: "platform-15"
+          count: 173
+      },
+      {
+        type: "train-platform-departure"
+        at: 800
+        data:
+          train: "train-1"
+          delay:
+            external: 70
+            internal: 20
+      }
     ], 100)
 
-    # visualization.run()
+    visualization.run()
