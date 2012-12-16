@@ -23,7 +23,7 @@ class SimulationsController < ApplicationController
 
   def result
     @simulation = Simulation.find(params[:id])
-    unless @simulation.result.nil?
+    unless false && @simulation.result.nil?
       # TODO! remove this static result
       render json: {
         events: [
