@@ -5,10 +5,14 @@ gem 'rails', '3.2.8'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'mysql2'
+group :development do
+  gem 'mysql2'
+end
+
 gem 'haml'
 gem 'sass'
 gem 'coffee-filter'
+gem 'thin'
 
 gem 'delayed_job_active_record'
 gem 'cocaine'
@@ -21,8 +25,9 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
+  gem 'therubyracer', :platforms => :ruby
+  gem 'libv8', '~> 3.11.8'
+  gem 'yui-compressor'
   gem 'uglifier', '>= 1.0.3'
 end
 
@@ -42,3 +47,9 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'debugger'
+# For Heroku
+group :production do
+  gem 'pg'
+  gem 'therubyracer'
+  gem 'libv8', '~> 3.11.8'
+end
