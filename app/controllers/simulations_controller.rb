@@ -18,7 +18,7 @@ class SimulationsController < ApplicationController
   end
 
   def test_java
-    render text: %x{type java}
+    render text: %x{java -jar ./java/PipeTest.jar}
   end
 
   def result
