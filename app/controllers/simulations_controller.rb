@@ -17,6 +17,10 @@ class SimulationsController < ApplicationController
     @simulation = Simulation.find(params[:id])
   end
 
+  def test_java
+    render text: %x{type java}
+  end
+
   def result
     @simulation = Simulation.find(params[:id])
     unless @simulation.result.nil?
