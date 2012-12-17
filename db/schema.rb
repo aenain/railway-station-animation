@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121217125342) do
+ActiveRecord::Schema.define(:version => 20121217132222) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20121217125342) do
     t.binary   "result"
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
+    t.integer  "default_platform_waiting_time"
   end
 
 end

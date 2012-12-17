@@ -122,7 +122,7 @@
       #departuring_passenger_count.slider
 
     %li.group
-      %ul.params-2
+      %ul.params-3
         %li
           .param
             .before
@@ -138,6 +138,14 @@
             = f.text_field :internal_arrival_time, class: 'knob', data: { min: 0, max: 60 }
             .after
               minutes to ride from the semaphore to its platform.
+
+        %li
+          .param
+            .before
+              Train arrives
+            = f.text_field :default_platform_waiting_time, class: 'knob', data: { min: 0, max: 60 }
+            .after
+              minutes before leaving if arrival or departure time is undefined.
 
     %li
       .label

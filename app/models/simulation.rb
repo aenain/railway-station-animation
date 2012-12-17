@@ -15,6 +15,7 @@ class Simulation < ActiveRecord::Base
                   :average_probability_of_having_ticket,
                   :average_share_of_visitors,
                   :cash_desk_count,
+                  :default_platform_waiting_time,
                   :external_delay_info_time_span,
                   :go_to_waiting_room_min_time_span,
                   :go_to_platform_max_time_span,
@@ -71,6 +72,7 @@ class Simulation < ActiveRecord::Base
 
       s.external_delay_info_time_span = 30
       s.internal_arrival_time = 5
+      s.default_platform_waiting_time = 10
 
       s.waiting_room_capacity = 1000
     end
