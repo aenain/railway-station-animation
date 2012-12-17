@@ -26,12 +26,14 @@ class Simulation < ActiveRecord::Base
                   :max_coming_time_span_without_ticket,
                   :max_companion_count,
                   :max_departuring_passenger_count,
+                  :max_external_delay,
                   :max_selling_ticket_time,
                   :max_serving_information_time,
                   :min_arriving_passenger_count,
                   :min_coming_time_span_with_ticket,
                   :min_coming_time_span_without_ticket,
                   :min_departuring_passenger_count,
+                  :min_external_delay,
                   :min_selling_ticket_time,
                   :min_serving_information_time,
                   :platform_count,
@@ -73,6 +75,8 @@ class Simulation < ActiveRecord::Base
       s.external_delay_info_time_span = 30
       s.internal_arrival_time = 5
       s.default_platform_waiting_time = 10
+      s.min_external_delay = 0
+      s.max_external_delay = 60
 
       s.waiting_room_capacity = 1000
     end

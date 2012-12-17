@@ -55,6 +55,11 @@ root.Simulation =
       name: "departuring_passenger_count"
       min: 0
       max: 1000
+    },
+    {
+      name: "external_delay"
+      min: 0
+      max: 240
     }
   ]
 

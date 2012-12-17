@@ -121,6 +121,14 @@
 
       #departuring_passenger_count.slider
 
+    %li
+      .label
+        Trains can be delayed
+        = hidden_attribute_range_fields(f, :external_delay)
+        minutes before they get to the station's semaphore.
+
+      #external_delay.slider
+
     %li.group
       %ul.params-3
         %li
