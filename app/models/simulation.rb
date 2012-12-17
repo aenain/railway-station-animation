@@ -94,7 +94,7 @@ class Simulation < ActiveRecord::Base
       raw = ""
 
       IO.popen("#{program.call} #{program.path} #{program.attributes}", 'w+') do |pipe|
-        pipe.puts self.attributes.except("created_at", "updated_at", "id").to_json
+        pipe.puts self.attributes.except("created_at", "updated_at", "id", "result").to_json
         pipe.close_write
 
         begin
