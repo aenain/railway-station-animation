@@ -122,8 +122,8 @@
       #departuring_passenger_count.slider
 
     %li.group
-      %ul
-        %li{ style: 'width: 30%' }
+      %ul.params-2
+        %li
           .param
             .before
               Train's external delay is known
@@ -131,21 +131,22 @@
             .after
               minutes before the scheduled semaphore arrival time.
 
-        %li{ style: 'width: 70%' }
-          .label
-            Train needs
-            = hidden_attribute_range_fields(f, :internal_arrival_time)
-            minutes to ride from the semaphore to its platform.
+        %li
+          .param
+            .before
+              Train needs
+            = f.text_field :internal_arrival_time, class: 'knob', data: { min: 0, max: 60 }
+            .after
+              minutes to ride from the semaphore to its platform.
 
-          #internal_arrival_time.slider
+    %li
+      .label
+        - if read_only
+          .cd-dropdown
+            %span= f.object.scheduling_algorithm_name || "None of the algorithms has been chosen."
 
-          .label
-            - if read_only
-              .cd-dropdown
-                %span= f.object.scheduling_algorithm_name || "None of the algorithms has been chosen."
-
-            - else
-              = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.values.map {|v| [v[:label], v[:value]] }, prompt: 'Choose a scheduling algorithm'
+        - else
+          = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.values.map {|v| [v[:label], v[:value]] }, prompt: 'Choose a scheduling algorithm'
 
 - 4.times do
   %br/

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214114238) do
+ActiveRecord::Schema.define(:version => 20121217125342) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -36,8 +36,7 @@ ActiveRecord::Schema.define(:version => 20121214114238) do
     t.integer  "max_coming_time_span_with_ticket"
     t.integer  "min_coming_time_span_without_ticket"
     t.integer  "max_coming_time_span_without_ticket"
-    t.integer  "min_internal_arrival_time"
-    t.integer  "max_internal_arrival_time"
+    t.integer  "internal_arrival_time"
     t.integer  "min_arriving_passenger_count"
     t.integer  "max_arriving_passenger_count"
     t.integer  "min_departuring_passenger_count"

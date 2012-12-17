@@ -55,11 +55,6 @@ root.Simulation =
       name: "departuring_passenger_count"
       min: 0
       max: 1000
-    },
-    {
-      name: "internal_arrival_time"
-      min: 0
-      max: 60
     }
   ]
 
