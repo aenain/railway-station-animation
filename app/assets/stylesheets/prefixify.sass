@@ -1,0 +1,3 @@
+@mixin prefixify($property, $value)
+  @each $prefix in "-webkit-", "-moz-", "-ms-", "-o-", ""
+    #{$prefix}#{$property}: $value

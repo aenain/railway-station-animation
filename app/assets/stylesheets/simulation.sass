@@ -5,7 +5,7 @@
   font-weight: normal
   font-style: normal
 
-@import colors.sass
+@import colors.sass, prefixify.sass
 
 body
   background-color: $ecru
@@ -25,7 +25,7 @@ a
   background-color: $blue
   font-family: 'League Gothic'
   text-shadow: -1px -1px 0 darken($blue, 10%)
-  -webkit-transition: background-color 0.5s ease-in-out
+  @include prefixify(transition, background-color 0.5s ease-in-out)
   cursor: pointer
 
   &:hover
