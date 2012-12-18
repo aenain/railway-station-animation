@@ -2,30 +2,45 @@
   = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'visualization'
   = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation'
 
+%ul#menu-tabs.menu
+  %li
+    = link_to 'Parameters', '#settings', class: 'icon-cogs'
+  %li.active
+    = link_to 'Visualization', '#visualization', class: 'icon-film'
+  %li
+    = link_to 'Summary', '#summary', class: 'icon-file'
+
 = form_for @simulation do |f|
-  %h2= link_to 'Show Settings', '#', id: 'toggle-settings'
+  %ul#tabs.tabs
+    %li#settings.settings.tab.hidden= render partial: 'settings', locals: { f: f, read_only: true }
 
-  #settings
-    = render partial: 'settings', locals: { f: f, read_only: true }
+    %li#visualization.tab
+      - if @simulation.result.nil?
+        #no-result
+          Simulation is still being computed. Please wait...
 
-  - if @simulation.result.nil?
-    #no-result
-      Simulation is still being computed. Please wait...
+      #controls.controls{ class: @simulation.result.nil? && "hidden" }
+        .param
+          .label acceleration
+          .value
+            = text_field_tag "acceleration", 100, data: { min: 10, max: 600 }, class: 'knob-enabled'
 
-  #controls{ class: @simulation.result.nil? && "hidden" }
-    .param
-      .label acceleration
-      .value
-        = text_field_tag "acceleration", 100, data: { min: 10, max: 600 }, class: 'knob-enabled'
+        = link_to '', '#', id: 'play', class: 'primary icon-play play'
 
-    = link_to '', '#', id: 'play', class: 'primary icon-play'
+      = render partial: 'visualization'
 
-  = render partial: 'visualization'
-  = render partial: 'summary'
+    %li#summary.summary.tab.hidden= render partial: 'summary'
 
 :coffeescript
   $ ->
-    $("#settings").hide()
+    $("#menu-tabs a").click (event) ->
+      event.preventDefault()
+      $this = $(this)
+      $("#menu-tabs .active").removeClass('active')
+      $("#tabs .tab").addClass('hidden')
+      $($this.attr('href')).removeClass('hidden')
+      $this.parent().addClass('active')
+
     $("#toggle-settings").toggle (event) ->
       event.preventDefault()
       $(this).text("Hide Settings")

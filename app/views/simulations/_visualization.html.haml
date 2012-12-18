@@ -1,8 +1,8 @@
 - content_for :head do
   = javascript_include_tag 'underscore-min', 'prefixify', 'visualization'
 
-#board
-  #communication
+#board.board
+  #communication.communication
     .actions
       = link_to "Don't show up messages", '#', id: 'toggle-messages'
     %ul#messages
