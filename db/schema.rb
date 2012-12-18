@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121218011539) do
+ActiveRecord::Schema.define(:version => 20121218101829) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -54,9 +54,9 @@ ActiveRecord::Schema.define(:version => 20121218011539) do
     t.integer  "platform_count"
     t.integer  "info_desk_count"
     t.integer  "cash_desk_count"
-    t.integer  "scheduling_algorithm"
+    t.string   "scheduling_algorithm"
     t.integer  "waiting_room_capacity"
-    t.integer  "crowd_speed_function"
+    t.string   "crowd_speed_function"
     t.binary   "result",                                  :limit => 2147483647
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
