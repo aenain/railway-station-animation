@@ -1,0 +1,14 @@
+defaults: &defaults
+  simulation_program:
+    call: "java -jar"
+    path: <%= Rails.root.join('simulation.jar') %>
+    options: "-i STDIN -o STDOUT"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

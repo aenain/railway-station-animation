@@ -91,26 +91,21 @@ class Simulation < ActiveRecord::Base
   # calls a simulation program and sends it a json with parameters with pipe, then it expects
   # data to appear on STDOUT (again with the pipe but in the opposite direction).
   def simulate
-    return # program is not ready.
+    program = ::Yetting.simulation_program
+    raw = ""
 
-    Thread.new do
-      program = Yettings.simulation.program
-      raw = ""
+    IO.popen("#{program["call"]} #{program["path"]} #{program["options"]}", 'w+') do |pipe|
+      pipe.puts self.attributes.except("created_at", "updated_at", "id", "result").to_json
+      pipe.close_write
 
-      IO.popen("#{program.call} #{program.path} #{program.attributes}", 'w+') do |pipe|
-        pipe.puts self.attributes.except("created_at", "updated_at", "id", "result").to_json
-        pipe.close_write
-
-        begin
-          raw << pipe.read until pipe.eof?
-        rescue IOError
-          pipe.close_read
-        end
+      begin
+        raw << pipe.read until pipe.eof?
+      rescue IOError
+        pipe.close_read
       end
-
-      self.result = JSON.parse(raw)
-      self.save
     end
+
+    self.update_column(:result, raw)
   end
   handle_asynchronously :simulate
 
