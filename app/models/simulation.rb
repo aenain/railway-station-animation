@@ -1,84 +1,56 @@
 class Simulation < ActiveRecord::Base
   CROWD_SPEED_FUNCTIONS = {
-    "logarithmic" => { label: "Logarithmic", value: 1 }
+    "logarithmic" => "Logarithmic"
   }
 
   SCHEDULING_ALGORITHMS = {
-    "wait" => { label: "Wait until scheduled platform is free", value: 1 },
-    "random" => { label: "Randomly choose free platform", value: 2 },
-    "attrs" => { label: "ATTRS", value: 3 }
+    "wait" => "Wait until scheduled platform is free",
+    "random" => "Randomly choose free platform",
+    "attrs" => "ATTRS"
   }
 
-  attr_accessible :crowd_speed_function,
-                  :average_probability_of_complaining,
-                  :average_probability_of_having_companion,
-                  :average_probability_of_having_ticket,
-                  :average_share_of_visitors,
-                  :cash_desk_count,
-                  :default_platform_waiting_time,
-                  :external_delay_info_time_span,
-                  :go_to_waiting_room_min_time_span,
-                  :go_to_platform_max_time_span,
-                  :info_desk_count,
-                  :internal_arrival_time,
-                  :max_arriving_passenger_count,
-                  :max_coming_time_span_with_ticket,
-                  :max_coming_time_span_without_ticket,
-                  :max_companion_count,
-                  :max_departuring_passenger_count,
-                  :max_external_delay,
-                  :max_selling_ticket_time,
-                  :max_serving_information_time,
-                  :min_arriving_passenger_count,
-                  :min_coming_time_span_with_ticket,
-                  :min_coming_time_span_without_ticket,
-                  :min_departuring_passenger_count,
-                  :min_external_delay,
-                  :min_selling_ticket_time,
-                  :min_serving_information_time,
-                  :platform_count,
-                  :scheduling_algorithm,
-                  :waiting_room_capacity
+  PARAMETERS = {
+    crowd_speed_function: { default: nil, values: CROWD_SPEED_FUNCTIONS.keys },
+    average_probability_of_complaining: { default: 15, values: 0..100 }, # percentages
+    average_probability_of_having_companion: { default: 25, values: 0..100 }, # percentages
+    average_probability_of_having_ticket: { default: 50, values: 0..100 }, # percentages
+    average_share_of_visitors: { default: 25, values: 0..100 }, # percentages
+    cash_desk_count: { default: 6, values: 1..20 },
+    default_platform_waiting_time: { default: 10, values: 1..60 }, # minutes
+    external_delay_info_time_span: { default: 30, values: 1..60 }, # minutes
+    go_to_waiting_room_min_time_span: { default: 12, values: 1..60 }, # minutes
+    go_to_platform_max_time_span: { default: 5, values: 1..60 }, # minutes
+    info_desk_count: { default: 2, values: 1..20 },
+    internal_arrival_time: { default: 5, values: 1..60 },
+    arriving_passenger_count: { default: [10, 800], values: 0..1_000 },
+    coming_time_span_with_ticket: { default: [15, 45], values: 0..60 }, # minutes
+    coming_time_span_without_ticket: { default: [15, 50], values: 10..120 }, # minutes
+    max_companion_count: { default: 2, values: 1..20 },
+    departuring_passenger_count: { default: [10, 800], values: 0..1_000 },
+    external_delay: { default: [0, 60], values: 0..480 }, # minutes
+    selling_ticket_time: { default: [5, 10], values: 0..30 }, # minutes
+    serving_information_time: { default: [5, 15], values: 0..30 }, # minutes
+    platform_count: { default: 4, values: 1..20 },
+    waiting_room_capacity: { default: 1_000, values: 100..10_000 },
+    scheduling_algorithm: { default: nil, values: SCHEDULING_ALGORITHMS.keys }
+  }
+
+  class_eval do
+    attr_accessible *PARAMETERS.keys
+  end
 
   serialize :result, JSON
 
   def self.build_with_defaults
     self.new.tap do |s|
-      s.average_probability_of_complaining = 15
-      s.average_probability_of_having_ticket = 50
-      s.average_share_of_visitors = 25
-      s.average_probability_of_having_companion = 25
-      s.max_companion_count = 2
-      s.cash_desk_count = 6
-      s.info_desk_count = 2
-      s.platform_count = 4
-      s.waiting_room_capacity = 1000
-
-      s.min_coming_time_span_with_ticket = 15
-      s.max_coming_time_span_with_ticket = 45
-      s.min_coming_time_span_without_ticket = 25
-      s.max_coming_time_span_without_ticket = 50
-
-      s.min_serving_information_time = 5
-      s.max_serving_information_time = 15
-      s.min_selling_ticket_time = 5
-      s.max_selling_ticket_time = 10
-
-      s.go_to_platform_max_time_span = 5
-      s.go_to_waiting_room_min_time_span = 12
-
-      s.min_arriving_passenger_count = 10
-      s.max_arriving_passenger_count = 800
-      s.min_departuring_passenger_count = 10
-      s.max_departuring_passenger_count = 800
-
-      s.external_delay_info_time_span = 30
-      s.internal_arrival_time = 5
-      s.default_platform_waiting_time = 10
-      s.min_external_delay = 0
-      s.max_external_delay = 60
-
-      s.waiting_room_capacity = 1000
+      PARAMETERS.each do |parameter, options|
+        if options[:default].is_a?(Array)
+          s.send("min_#{parameter}=", options[:default].first)
+          s.send("max_#{parameter}=", options[:default].last)
+        else
+          s.send("#{parameter}=", options[:default])
+        end
+      end
     end
   end
 

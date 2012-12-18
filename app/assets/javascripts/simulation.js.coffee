@@ -25,48 +25,10 @@ root.Simulation =
         width: 360
         height: 360
 
-  rangeAttributes: [
-    {
-      name: "coming_time_span_with_ticket"
-      min: 1
-      max: 60
-    },
-    {
-      name: "coming_time_span_without_ticket"
-      min: 1
-      max: 60
-    },
-    {
-      name: "serving_information_time"
-      min: 1
-      max: 60
-    },
-    {
-      name: "selling_ticket_time"
-      min: 1
-      max: 60
-    },
-    {
-      name: "arriving_passenger_count"
-      min: 0
-      max: 1000
-    },
-    {
-      name: "departuring_passenger_count"
-      min: 0
-      max: 1000
-    },
-    {
-      name: "external_delay"
-      min: 0
-      max: 240
-    }
-  ]
-
   initFields: (options) ->
     options ||= {}
     Simulation._initKnob(options)
-    Simulation._initLabelRangeWithFields(r.name, { min: r.min, max: r.max, disabled: !!options.disabled }, "simulation_") for r in Simulation.rangeAttributes
+    Simulation._initLabelRangeWithFields({ disabled: !!options.disabled, prefix: "simulation_" })
 
   getResult: (path, options) ->
     options ||= {}
@@ -112,22 +74,30 @@ root.Simulation =
     $(".knob-big").knob $.extend({ readOnly: options.disabled }, knob.size.big, colors.normal)
     $(".knob-enabled").knob $.extend({ readOnly: false }, knob.size.normal, knob.colors.enabled.normal)
 
-  _initLabelRangeWithFields: (rangeName, rangeOptions, prefix) ->
-    $range = $("#" + rangeName)
-    $label = $("#" + rangeName + "_label")
-    $inputs = $("#" + prefix + "min_" + rangeName + ", #" + prefix + "max_" + rangeName)
-    values = Simulation._extractInputNumericValues($inputs)
-    $.extend(rangeOptions, {
-      range: true
-      values: values
-      slide: (_, ui) ->
-        $inputs.eq(0).val(ui.values[0])
-        $inputs.eq(1).val(ui.values[1])
-        $label.text(ui.values.join(" - "))
-    })
+  _initLabelRangeWithFields: (options) ->
+    $("form .slider").each (_, slider) ->
+      $slider = $(slider)
+      sliderId = $slider.attr('id')
+      $label = $("#" + sliderId + "_label")
+      $inputs = $("#" + options.prefix + "min_" + sliderId + ", #" + options.prefix + "max_" + sliderId)
 
-    $range.slider(rangeOptions)
-    $label.text(values.join(" - "))
+      min = parseInt($slider.attr('data-min'))
+      max = parseInt($slider.attr('data-max'))
+      values = Simulation._extractInputNumericValues($inputs)
+
+      rangeOptions =
+        disabled: options.disabled
+        min: min
+        max: max
+        range: true
+        values: values
+        slide: (_, ui) ->
+          $inputs.eq(0).val(ui.values[0])
+          $inputs.eq(1).val(ui.values[1])
+          $label.text(ui.values.join(" - "))
+
+      $slider.slider(rangeOptions)
+      $label.text(values.join(" - "))
 
   _extractInputNumericValues: ($inputs) ->
     values = []

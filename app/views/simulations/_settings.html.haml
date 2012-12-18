@@ -11,7 +11,7 @@
               %span.nowrap Probability of
               %span.nowrap having a ticket
 
-            = f.text_field :average_probability_of_having_ticket, class: 'knob', data: { min: 0, max: 100 }
+            = attribute_field(f, :average_probability_of_having_ticket, class: 'knob')
 
         %li{ style: 'width: 70%' }
           .label
@@ -19,14 +19,14 @@
             = hidden_attribute_range_fields(f, :coming_time_span_with_ticket)
             minutes before a train.
 
-          #coming_time_span_with_ticket.slider
+          = attribute_range_field(f, :coming_time_span_with_ticket, class: 'slider')
 
           .label
             People without tickets come
             = hidden_attribute_range_fields(f, :coming_time_span_without_ticket)
             minutes before a train.
 
-          #coming_time_span_without_ticket.slider
+          = attribute_range_field(f, :coming_time_span_without_ticket, class: 'slider')
 
     %li.group
       %ul
@@ -35,7 +35,7 @@
             .before
               %span.nowrap Probability of
               %span.nowrap complaining
-            = f.text_field :average_probability_of_complaining, class: 'knob-danger', data: { min: 0, max: 100 }
+            = attribute_field(f, :average_probability_of_complaining, class: 'knob-danger')
 
         %li{ style: 'width: 70%' }
           .label
@@ -43,14 +43,14 @@
             = hidden_attribute_range_fields(f, :serving_information_time)
             minutes.
 
-          #serving_information_time.slider
+          = attribute_range_field(f, :serving_information_time, class: 'slider')
 
           .label
             Selling tickets takes
             = hidden_attribute_range_fields(f, :selling_ticket_time)
             minutes.
 
-          #selling_ticket_time.slider
+          = attribute_range_field(f, :selling_ticket_time, class: 'slider')
 
     - 4.times do
       %br/
@@ -62,7 +62,8 @@
             .before
               %span.nowrap Go to the waiting room
               %span.nowrap when more than
-            = f.text_field :go_to_waiting_room_min_time_span, class: 'knob', data: { min: 0, max: 60 }
+
+            = attribute_field(f, :go_to_waiting_room_min_time_span, class: 'knob')
             .after minutes to the train.
           
 
@@ -71,7 +72,7 @@
             .before
               %span.nowrap Go to the platform
               %span.nowrap when less than
-            = f.text_field :go_to_platform_max_time_span, class: 'knob', data: { min: 0, max: 60 }
+            = attribute_field(f, :go_to_platform_max_time_span, class: 'knob')
             .after minutes to the train.
 
     %li.group
@@ -81,7 +82,7 @@
             .before
               %span.nowrap Probability of
               %span.nowrap having companions
-            = f.text_field :average_probability_of_having_companion, class: 'knob', data: { min: 0, max: 60 }
+            = attribute_field(f, :average_probability_of_having_companion, class: 'knob')
 
         %li
           .param
@@ -89,7 +90,7 @@
               %span.nowrap Maximum
               %br/
               %span.nowrap companions
-            = f.text_field :max_companion_count, class: 'knob', data: { min: 0, max: 10 }
+            = attribute_field(f, :max_companion_count, class: 'knob')
 
     - 4.times do
       %br/
@@ -100,7 +101,7 @@
           %span.nowrap Share of people who are not interested in the particular train.
           %br/
           %span.nowrap They come to get some informations and/or buy tickets.
-        = f.text_field :average_share_of_visitors, class: 'knob-big', data: { min: 0, max: 100 }
+        = attribute_field(f, :average_share_of_visitors, class: 'knob-big')
 
 - 4.times do
   %br/
@@ -112,14 +113,14 @@
         = hidden_attribute_range_fields(f, :arriving_passenger_count)
         people arrive to the station in a single train.
 
-      #arriving_passenger_count.slider
+      = attribute_range_field(f, :arriving_passenger_count, class: 'slider')
 
     %li
       .label
         = hidden_attribute_range_fields(f, :departuring_passenger_count)
         people departure from the station in a single train.
 
-      #departuring_passenger_count.slider
+      = attribute_range_field(f, :departuring_passenger_count, class: 'slider')
 
     %li
       .label
@@ -127,7 +128,7 @@
         = hidden_attribute_range_fields(f, :external_delay)
         minutes before they get to the station's semaphore.
 
-      #external_delay.slider
+      = attribute_range_field(f, :external_delay, class: 'slider')
 
     %li.group
       %ul.params-3
@@ -135,7 +136,7 @@
           .param
             .before
               Train's external delay is known
-            = f.text_field :external_delay_info_time_span, class: 'knob', data: { min: 0, max: 60 }
+            = attribute_field(f, :external_delay_info_time_span, class: 'knob')
             .after
               minutes before the scheduled semaphore arrival time.
 
@@ -143,7 +144,7 @@
           .param
             .before
               Train needs
-            = f.text_field :internal_arrival_time, class: 'knob', data: { min: 0, max: 60 }
+            = attribute_field(f, :internal_arrival_time, class: 'knob')
             .after
               minutes to ride from the semaphore to its platform.
 
@@ -151,7 +152,7 @@
           .param
             .before
               Train arrives
-            = f.text_field :default_platform_waiting_time, class: 'knob', data: { min: 0, max: 60 }
+            = attribute_field(f, :default_platform_waiting_time, class: 'knob')
             .after
               minutes before leaving if arrival or departure time is undefined.
 
@@ -162,7 +163,7 @@
             %span= f.object.scheduling_algorithm_name || "None of the algorithms has been chosen."
 
         - else
-          = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.values.map {|v| [v[:label], v[:value]] }, prompt: 'Choose a scheduling algorithm'
+          = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.to_a.map(&:reverse), prompt: 'Choose a scheduling algorithm'
 
 - 4.times do
   %br/
@@ -175,24 +176,24 @@
           .param
             .before
               Platforms
-            = f.text_field :platform_count, class: 'knob', data: { min: 1, max: 20 }
+            = attribute_field(f, :platform_count, class: 'knob')
         %li
           .param
             .before
               Info desks
-            = f.text_field :info_desk_count, class: 'knob', data: { min: 1, max: 20 }
+            = attribute_field(f, :info_desk_count, class: 'knob')
         %li
           .param
             .before
               Cash desks
-            = f.text_field :cash_desk_count, class: 'knob', data: { min: 1, max: 20 }
+            = attribute_field(f, :cash_desk_count, class: 'knob')
 
     %li
       .param
         .before
           %span.nowrap Waiting room
           %span.nowrap capacity
-        = f.text_field :waiting_room_capacity, class: 'knob-big', data: { min: 100, max: 10000 }
+        = attribute_field(f, :waiting_room_capacity, class: 'knob-big')
 
 - unless read_only
   :coffeescript
