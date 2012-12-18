@@ -2,6 +2,10 @@
 require 'nokogiri'
 require 'json'
 
+PLATFORMS = 4
+RAILS = 2
+STATION_NAME = "Kraków Główny"
+
 class Train
   ATTRIBUTES = [:symbol, :arrival_at, :departure_at, :from, :to, :platform, :rail, :type]
   class_eval do
@@ -37,8 +41,6 @@ class Train
 end
 
 trains = {}
-PLATFORMS = 4
-RAILS = 2
 
 arrivals = Nokogiri::HTML(File.read("arrivals.html"))
 table = arrivals.css('table.hafasResult').first
@@ -87,5 +89,5 @@ trains.each do |_, train|
 end
 
 File.open("schedule.json", 'w') do |f|
-  f.write JSON.pretty_generate({ trains: trains.values.map(&:to_hash) })
+  f.write JSON.pretty_generate({ station: STATION_NAME, trains: trains.values.map(&:to_hash) })
 end
