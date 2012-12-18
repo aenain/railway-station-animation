@@ -131,7 +131,14 @@
       = attribute_range_field(f, :external_delay, class: 'slider')
 
     %li.group
-      %ul.params-3
+      %ul.params-4
+        %li
+          .param
+            .before
+              %span.nowrap Probability of train's
+              %span.nowrap external delay
+            = attribute_field(f, :average_probability_of_external_delay, class: 'knob')
+
         %li
           .param
             .before
@@ -160,7 +167,7 @@
       .label
         - if read_only
           .cd-dropdown
-            %span= f.object.scheduling_algorithm_name || "None of the algorithms has been chosen."
+            %span= f.object.scheduling_algorithm || "None of the algorithms has been chosen."
 
         - else
           = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.to_a.map(&:reverse), prompt: 'Choose a scheduling algorithm'

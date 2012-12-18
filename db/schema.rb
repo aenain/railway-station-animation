@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121218101829) do
+ActiveRecord::Schema.define(:version => 20121218160255) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20121218101829) do
     t.integer  "default_platform_waiting_time"
     t.integer  "min_external_delay"
     t.integer  "max_external_delay"
+    t.integer  "average_probability_of_external_delay"
   end
 
 end
