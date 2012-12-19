@@ -99,11 +99,10 @@ root.Visualization = class Visualization
 
     @_animateTrainDelay($delay, data.delay)
 
-    @_animateTrainDeparture $train, =>
+    @_animateTrainDeparture $train, data, =>
       delete @objects[data.train]
       delete @objects["#{data.train}-count"]
       $train.remove()
-    , data.duration * 1000.0 / @acceleration
 
   _onPeopleChange: (data) ->
     @objects["#{data.region}-count"].text(data.count)
@@ -163,9 +162,10 @@ root.Visualization = class Visualization
       $train.removeClass('arrival')
     , 1
 
-  _animateTrainDeparture: ($train, callback, duration) ->
-    @_setAnimationDuration($train, Math.round(data.duration * 1000.0 / @acceleration) + 'ms')
-    @_bindAnimationEndListener($train, callback, duration)
+  _animateTrainDeparture: ($train, data, callback) ->
+    realDuration = Math.round(data.duration * 1000.0 / @acceleration)
+    @_setAnimationDuration($train, realDuration + 'ms')
+    @_bindAnimationEndListener($train, callback, realDuration)
 
     setTimeout =>
       $train.addClass('departure')
