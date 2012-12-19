@@ -79,6 +79,7 @@
           window.visualizationInstance.run()
         else
           window.visualizationInstance.resume(Simulation.getAcceleration())
+
         $play.addClass("icon-pause").removeClass("icon-play")
         Simulation.disableKnob($acceleration)
 
@@ -100,3 +101,8 @@
         $("#no-result").hide()
         $("#controls, #communication").fadeIn()
         Simulation.events = data.events
+        $(window).bind 'keydown.simulation', (event) ->
+            if event.keyCode == 32
+              event.preventDefault()
+              Simulation.togglePlayback()
+              return false
