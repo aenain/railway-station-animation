@@ -18,6 +18,10 @@ root.Simulation =
           bgColor: "rgb(254, 250, 245)"
           fgColor: "rgb(159, 63, 95)"
     size:
+      toolbar:
+        width: 50
+        height: 50
+        thickness: 0.25
       normal:
         width: 120
         height: 120
@@ -65,6 +69,30 @@ root.Simulation =
         formatted += seconds + " sec"
     formatted
 
+  # changing value on the first knob changes value on the another
+  bindKnobsTogether: ($element1, $element2) ->
+    $element1.trigger 'configure',
+      change: (value) ->
+        $element2.val(value).trigger('change')
+
+    $element2.trigger 'configure',
+      change: (value) ->
+        $element1.val(value).trigger('change')
+
+  disableKnob: ($elements) ->
+    colors = Simulation.knob.colors.disabled
+
+    $elements.each (_, element) ->
+      elementColors = if $(element).hasClass('knob-danger') then colors.danger else colors.normal
+      $(element).trigger('configure', { readOnly: true, fgColor: elementColors.fgColor })
+
+  enableKnob: ($elements) ->
+    colors = Simulation.knob.colors.enabled
+
+    $elements.each (_, element) ->
+      elementColors = if $(element).hasClass('knob-danger') then colors.danger else colors.normal
+      $(element).trigger('configure', { readOnly: false, fgColor: elementColors.fgColor })
+
   _initKnob: (options) ->
     knob = Simulation.knob
     colors = if options.disabled then knob.colors.disabled else knob.colors.enabled
@@ -73,6 +101,7 @@ root.Simulation =
     $(".knob-danger").knob $.extend({ readOnly: options.disabled }, knob.size.normal, colors.danger)
     $(".knob-big").knob $.extend({ readOnly: options.disabled }, knob.size.big, colors.normal)
     $(".knob-enabled").knob $.extend({ readOnly: false }, knob.size.normal, knob.colors.enabled.normal)
+    $(".knob-toolbar").knob $.extend({ readOnly: false, displayInput: false }, knob.size.toolbar, knob.colors.enabled.normal)
 
   _initLabelRangeWithFields: (options) ->
     $("form .slider").each (_, slider) ->

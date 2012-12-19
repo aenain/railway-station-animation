@@ -1,6 +1,20 @@
 - content_for :head do
-  = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'visualization'
-  = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation'
+  = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'visualization', 'tooltipster'
+  = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation', 'jquery.tooltipster.min'
+
+#communication.toolbar.hidden
+  .main
+    %span#simulation-time-toolbar.time 00:00:00
+
+    .actions
+      = link_to '', '#', class: 'icon-refresh tooltip', id: 'refresh-link', title: "Restart visualization"
+      = link_to '', '#', class: 'icon-ok-circle tooltip', id: 'toggle-messages', title: "Don't show up messages"
+
+  .controls
+    = text_field_tag 'toolbar-acceleration', @acceleration, data: { min: 10, max: 600 }, class: 'knob-toolbar'
+    = link_to "", "#", class: 'icon-play play-control tooltip', id: 'toolbar-play', title: "Play visualization"
+
+  %ul#messages
 
 %ul#menu-tabs.menu
   %li
@@ -19,13 +33,15 @@
         #no-result
           Simulation is still being computed. Please wait...
 
-      #controls.controls{ class: @simulation.result.nil? && "hidden" }
-        .param
-          .label acceleration
-          .value
-            = text_field_tag "acceleration", 100, data: { min: 10, max: 600 }, class: 'knob-enabled'
+      #controls.main-control{ class: @simulation.result.nil? && "hidden" }
+        .label acceleration
+        .value
+          = text_field_tag "acceleration", @acceleration, data: { min: 10, max: 600 }, class: 'knob-enabled'
 
-        = link_to '', '#', id: 'play', class: 'primary icon-play play'
+        .button
+          = link_to '', '#', id: 'play', class: 'primary icon-play play'
+
+        #simulation-time.clock 00:00:00
 
       = render partial: 'visualization'
 
@@ -33,6 +49,17 @@
 
 :coffeescript
   $ ->
+    $(".tooltip:not(.play-control)").tooltipster(
+      position: 'bottom-right'
+      offsetY: 2
+    )
+
+    $(".tooltip.play-control").tooltipster(
+      position: 'bottom-left'
+      offsetY: 16
+      offsetX: -9
+    )
+
     $("#menu-tabs a").click (event) ->
       event.preventDefault()
       $this = $(this)

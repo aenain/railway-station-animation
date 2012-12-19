@@ -15,6 +15,7 @@ class SimulationsController < ApplicationController
 
   def show
     @simulation = Simulation.find(params[:id])
+    @acceleration = 100
   end
 
   def result

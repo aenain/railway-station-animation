@@ -2,13 +2,6 @@
   = javascript_include_tag 'underscore-min', 'prefixify', 'visualization'
 
 #board.board
-  #communication.communication
-    .actions
-      = link_to "Don't show up messages", '#', id: 'toggle-messages'
-    %ul#messages
-
-  %h2#simulation-time.time.hidden 00:00:00
-
   %ul.platforms
     - (1..@simulation.platform_count).reverse_each do |platform_number|
       %li

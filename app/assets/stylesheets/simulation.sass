@@ -42,9 +42,10 @@ footer
   text-align: center
   padding: 1em
   color: $ecru
-  font-family: 'League Gothic'
-  font-size: 1.5em
-  margin-top: 2em
+  font-family: 'Lucida Grande', 'Trebuchet MS', sans-serif
+  font-size: 0.8em
+  letter-spacing: -1px
+  margin-top: 4em
 
 #header
   width: 100%
@@ -88,6 +89,104 @@ footer
   font-size: 2em
   padding: 2em 0
   text-align: center
+
+.toolbar
+  width: 200px
+  height: 40px
+  top: 1em
+  right: 1em
+  position: fixed
+  z-index: 20
+
+  .main
+    width: 100%
+    height: 40px
+    top: 0px
+    left: 0px
+    z-index: 0
+    position: absolute
+    overflow: hidden
+    border-radius: 0 5px 5px 0
+    background-color: #eee
+    box-shadow: inset 0 0 20px #ddd, 0 0 3px #888
+
+    & > *
+      margin-top: 3px
+      float: left
+      display: block
+      position: relative
+      font-family: 'League Gothic'
+      color: $gray
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2)
+
+    .time
+      margin-left: 44px
+      font-size: 24px
+      text-shadow: 0 1px 0 #fff
+      color: #000
+
+    .actions
+      padding: 0
+      margin: 0
+      float: right
+      position: relative
+      overflow: hidden
+
+      .icon-refresh, .icon-remove-circle, .icon-ok-circle
+        width: 35px
+        height: 32px
+        padding-top: 8px
+        top: 4px
+        margin: 0
+        float: left
+        display: block
+        border-left: 1px solid rgba(0, 0, 0, 0.05)
+        font-size: 19px
+        text-shadow: 0 1px 0 #fff
+        text-align: center
+
+        &:hover
+          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1)
+
+          &, & + .icon-refresh, .icon-remove-circle, .icon-ok-circle
+            border-left-color: rgba(0, 0, 0, 0.1)
+
+      .icon-refresh
+        color: $gray
+
+      .icon-remove-circle
+        color: $danger
+
+      .icon-ok-circle
+        color: $blue
+        text-shadow: 0 1px 0 #fff
+
+  .controls
+    width: 50px
+    height: 50px
+    top: -5px
+    left: -30px
+    position: relative
+    z-index: 1
+    border-radius: 50%
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 10px 10px rgba(0, 0, 0, 0.05)
+    background-color: #eee
+
+    .play-control
+      width: 25px
+      height: 25px
+      top: -46px
+      left: 19px
+      display: block
+      position: relative
+      font-size: 22px
+      color: $blue
+      text-shadow: 0 1px 0 #fff
+
+      &.icon-pause
+        top: -44px
+        left: 18px
+        font-size: 18px
 
 .menu
   width: 80%
@@ -136,47 +235,69 @@ footer
         display: inline
         padding-right: 0.4em
 
-.controls
+.main-control
   height: auto
-  width: 27em
-  margin: 5em auto
+  width: 60%
+  margin: 2em auto
   overflow: hidden
+  display: table
+  font-family: 'League Gothic'
+  font-size: 2.5em
+  line-height: 1em
+  color: $gray
 
-  .param
-    display: table
-    overflow: hidden
-    margin: 0 auto
-    float: left
+  & > *
+    display: table-cell
+    vertical-align: middle
+    text-align: center
 
-    .label, .value, .icon-play
-      display: table-cell
-      vertical-align: middle
+  .label, .clock
+    text-shadow: 0 1px 0 #fff
 
-    .label
-      font-family: 'League Gothic'
-      font-size: 2.5em
-      padding-right: 0.5em
-      color: $gray
+  .label
+    letter-spacing: -1px
+    width: 40%
+    text-align: right
 
-  .play
-    width: 1em
-    height: 1em
-    padding: 0.5em 0.43em 0.5em 0.57em
-    top: 0.25em
-    margin-left: 0.4em
-    border-radius: 50%
-    background-color: $blue
-    font-size: 3em
-    color: $ecru
-    float: left
-    position: relative
+  .value
+    width: 20%
 
-    &:before
-      display: block
-      line-height: 1.25em
-      text-align: center
-      padding: 0
-      margin: 0
+  .button
+    width: 20%
+    text-align: left
+
+    .play
+      width: 1em
+      height: 1em
+      top: -0.1em
+      padding: 0.45em 0.38em 0.45em 0.52em
+      position: relative
+      font-size: 1.2em
+      line-height: 1em
+      border-radius: 50%
+      background-color: $blue
+      box-shadow: inset 0 0 0.5em darken($blue, 5%)
+      color: rgb(254, 250, 245)
+
+      &.icon-pause
+        font-size: 0.8em
+        width: 1.5*1em
+        height: 1.5*1em
+        top: -1.5*0.1em
+        padding: 1.5*0.6em 1.5*0.45em 1.5*0.3em 1.5*0.45em
+        box-shadow: inset 0 0 1.5*0.5em darken($blue, 5%)
+
+      &:before
+        display: block
+        line-height: 1.25em
+        text-align: center
+        padding: 0
+        margin: 0
+
+  .clock
+    width: 20%
+    text-align: right
+    opacity: 0
 
 h2
   font-family: 'League Gothic'
