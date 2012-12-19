@@ -68,27 +68,35 @@
       $($this.attr('href')).removeClass('hidden')
       $this.parent().addClass('active')
 
-    $("#toggle-settings").toggle (event) ->
-      event.preventDefault()
-      $(this).text("Hide Settings")
-      $("#settings").slideDown(1000)
-    , (event) ->
-      event.preventDefault()
-      $(this).text("Show Settings")
-      $("#settings").slideUp(1000)
+    $play = $("#play, #toolbar-play")
+    $acceleration = $("#acceleration, #toolbar-acceleration")
 
-    $("#play").click (event) ->
+    Simulation.bind 'play', ->
+      if Simulation.events
+        if !window.visualizationInstance
+          $("#simulation-time, #communication").css('opacity', 1)
+          window.visualizationInstance = new Visualization(Simulation.events, Simulation.getAcceleration())
+          window.visualizationInstance.run()
+        else
+          window.visualizationInstance.resume(Simulation.getAcceleration())
+        $play.addClass("icon-pause").removeClass("icon-play")
+        Simulation.disableKnob($acceleration)
+
+    Simulation.bind 'pause', ->
+      if window.visualizationInstance
+        window.visualizationInstance.pause()
+        $play.addClass("icon-play").removeClass("icon-pause")
+        Simulation.enableKnob($acceleration)
+
+    $play.click (event) ->
       event.preventDefault()
-      if !window.visualization && window.simulationEvents
-        window.visualization = new Visualization(window.simulationEvents, parseInt($("#acceleration").val()))
-        window.visualization.run()
-        $("#controls").hide()
-        $("#simulation-time").fadeIn()
+      Simulation.togglePlayback()
 
     Simulation.initFields({ disabled: true })
+    Simulation.bindKnobsTogether($acceleration.eq(0), $acceleration.eq(1))
     Simulation.getResult "#{result_simulation_path(@simulation)}",
       success: (data) ->
         Simulation.initSummary(data.summary)
         $("#no-result").hide()
-        $("#controls, #summary").fadeIn()
-        window.simulationEvents = data.events
+        $("#controls, #communication").fadeIn()
+        Simulation.events = data.events

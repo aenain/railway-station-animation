@@ -29,6 +29,13 @@ root.Simulation =
         width: 360
         height: 360
 
+  callbacks:
+    play: ->
+      false
+    pause: ->
+      false
+  state: 'pause'
+
   initFields: (options) ->
     options ||= {}
     Simulation._initKnob(options)
@@ -68,6 +75,22 @@ root.Simulation =
       if seconds > 0
         formatted += seconds + " sec"
     formatted
+
+  getAcceleration: ->
+    parseInt($("#acceleration").val())
+
+  togglePlayback: ->
+    if @state == "pause"
+      @trigger('play')
+    else
+      @trigger('pause')
+
+  trigger: (event) ->
+    @callbacks[event]() if typeof @callbacks[event] == "function"
+    @state = event
+
+  bind: (event, callback) ->
+    @callbacks[event] = callback
 
   # changing value on the first knob changes value on the another
   bindKnobsTogether: ($element1, $element2) ->

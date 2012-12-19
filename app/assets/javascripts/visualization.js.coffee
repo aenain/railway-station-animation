@@ -18,11 +18,22 @@ root.Visualization = class Visualization
     @_cacheInfrastructure()
 
   run: ->
+    @startSimulationTime = 0
+    @resume(@acceleration)
+
+  resume: (acceleration) ->
+    @acceleration = acceleration
+    @running = true
     @start = Date.now() # in milliseconds
     @_process(@start)
 
+  pause: ->
+    @start = Date.now()
+    @startSimulationTime = @simulationTime
+    @running = false
+
   _process: (now) =>
-    @simulationTime = (Date.now() - @start) * @acceleration / 1000.0 # in seconds
+    @simulationTime = @startSimulationTime + (Date.now() - @start) * @acceleration / 1000.0 # in seconds
     @_updateClock()
 
     while @events.length > 0 && @events[0].at <= @simulationTime
@@ -35,7 +46,7 @@ root.Visualization = class Visualization
         else @_onPeopleChange(event.data)
 
     if @events.length > 0
-      @_requestAnimationFrame(@_process)
+      @_requestAnimationFrame(@_process) if @running
     else
       @_clearCache()
 
@@ -47,7 +58,7 @@ root.Visualization = class Visualization
     $("[id^='cash-desk'], [id^='info-desk'], [id^='platform'], [id^='tunnel'], [id^='rail']").each (_, region) =>
       @objects[region.id] = $(region)
 
-    @objects[id] = $("#" + id) for id in ["waiting-room-count", "hall-count", "simulation-time"]
+    @objects[id] = $("#" + id) for id in ["waiting-room-count", "hall-count"]
     return
 
   _clearCache: ->
@@ -65,7 +76,7 @@ root.Visualization = class Visualization
     minutes = "0#{minutes}" if minutes < 10
     seconds = "0#{seconds}" if seconds < 10
 
-    @objects["simulation-time"].text "#{hours}:#{minutes}:#{seconds}"
+    $("[id^='simulation-time']").text("#{hours}:#{minutes}:#{seconds}")
 
   _onTrainArrival: (data) ->
     delayed = Math.round((data.delay.external + data.delay.semaphore) / 60.0) > 0
@@ -153,6 +164,7 @@ root.Visualization = class Visualization
     , 1
 
   _animateTrainDeparture: ($train, callback, duration) ->
+    @_setAnimationDuration($train, Math.round(data.duration * 1000.0 / @acceleration) + 'ms')
     @_bindAnimationEndListener($train, callback, duration)
 
     setTimeout =>
