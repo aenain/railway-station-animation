@@ -58,9 +58,9 @@
   $ ->
     $("#toggle-messages").toggle (event) ->
       event.preventDefault()
-      $(this).text("Show up messages")
+      $(this).data('title', "Show up messages").attr('title', "Show up messages").addClass('icon-ok-circle').removeClass('icon-remove-circle')
       $("#messages").slideUp()
     , (event) ->
       event.preventDefault()
-      $(this).text("Don't show up messages")
+      $(this).data('title', "Don't show up messages").attr('title', "Show up messages").addClass('icon-remove-circle').removeClass('icon-ok-circle')
       $("#messages").slideDown()

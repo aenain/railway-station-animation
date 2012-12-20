@@ -2,18 +2,19 @@
   = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'visualization', 'tooltipster'
   = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation', 'jquery.tooltipster.min'
 
-#communication.toolbar.hidden
+#toolbar.toolbar
   .main
     %span#simulation-time-toolbar.time 00:00:00
 
     .actions
       = link_to '', '#', class: 'icon-refresh tooltip', id: 'refresh-link', title: "Restart visualization"
-      = link_to '', '#', class: 'icon-ok-circle tooltip', id: 'toggle-messages', title: "Don't show up messages"
+      = link_to '', '#', class: 'icon-remove-circle tooltip', id: 'toggle-messages', title: "Don't show up messages"
 
   .controls
     = text_field_tag 'toolbar-acceleration', @acceleration, data: { min: 10, max: 600 }, class: 'knob-toolbar'
     = link_to "", "#", class: 'icon-play play-control tooltip', id: 'toolbar-play', title: "Play visualization"
 
+#communication.communication
   %ul#messages
 
 %ul#menu-tabs.menu
@@ -49,6 +50,10 @@
 
 :coffeescript
   $ ->
+    $("#refresh-link").click (event) ->
+      event.preventDefault()
+      window.location.reload()
+
     $(".tooltip:not(.play-control)").tooltipster(
       position: 'bottom-right'
       offsetY: 2
@@ -74,7 +79,7 @@
     Simulation.bind 'play', ->
       if Simulation.events
         if !window.visualizationInstance
-          $("#simulation-time, #communication").css('opacity', 1)
+          $("#simulation-time, #toolbar, #communication").css('opacity', 1)
           window.visualizationInstance = new Visualization(Simulation.events, Simulation.getAcceleration())
           window.visualizationInstance.run()
         else
@@ -99,7 +104,7 @@
       success: (data) ->
         Simulation.initSummary(data.summary)
         $("#no-result").hide()
-        $("#controls, #communication").fadeIn()
+        $("#controls, #toolbar, #communication").fadeIn()
         Simulation.events = data.events
         $(window).bind 'keydown.simulation', (event) ->
             if event.keyCode == 32
