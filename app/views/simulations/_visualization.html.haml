@@ -53,14 +53,3 @@
         - (1..@simulation.cash_desk_count).reverse_each do |desk_number|
           %li
             %span.icon-user{ id: "cash-desk-#{desk_number}-count" } 0
-
-:coffeescript
-  $ ->
-    $("#toggle-messages").toggle (event) ->
-      event.preventDefault()
-      $(this).data('title', "Show up messages").attr('title', "Show up messages").addClass('icon-ok-circle').removeClass('icon-remove-circle')
-      $("#messages").slideUp()
-    , (event) ->
-      event.preventDefault()
-      $(this).data('title', "Don't show up messages").attr('title', "Show up messages").addClass('icon-remove-circle').removeClass('icon-ok-circle')
-      $("#messages").slideDown()

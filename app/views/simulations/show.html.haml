@@ -8,11 +8,11 @@
 
     .actions
       = link_to '', '#', class: 'icon-refresh tooltip', id: 'refresh-link', title: "Restart visualization"
-      = link_to '', '#', class: 'icon-remove-circle tooltip', id: 'toggle-messages', title: "Don't show up messages"
+      = link_to '', '#', class: 'icon-remove-circle tooltip-fixed', id: 'toggle-messages', title: "Don't show up messages", data: { 'tooltip-width' => 140 }
 
   .controls
     = text_field_tag 'toolbar-acceleration', @acceleration, data: { min: 10, max: 600 }, class: 'knob-toolbar'
-    = link_to "", "#", class: 'icon-play play-control tooltip', id: 'toolbar-play', title: "Play visualization"
+    = link_to "", "#", class: 'icon-play play-control', id: 'toolbar-play'
 
 #communication.communication
   %ul#messages
@@ -50,9 +50,27 @@
 
 :coffeescript
   $ ->
+    changeTooltipElementLabel = ($element, label) ->
+      if $element.data('title') # set by tooltip
+        $(".tooltip-message-content").text(label)
+        $element.data('title', label)
+      else
+        $element.attr('title', label)
+
     $("#refresh-link").click (event) ->
       event.preventDefault()
       window.location.reload()
+
+    $("#toggle-messages").toggle (event) ->
+      event.preventDefault()
+      changeTooltipElementLabel($(this), "Show up messages")
+      $(this).addClass('icon-ok-circle').removeClass('icon-remove-circle')
+      $("#messages").slideUp()
+    , (event) ->
+      event.preventDefault()
+      changeTooltipElementLabel($(this), "Don't show up messages")
+      $(this).addClass('icon-remove-circle').removeClass('icon-ok-circle')
+      $("#messages").slideDown()
 
     $(".tooltip:not(.play-control)").tooltipster(
       position: 'bottom-right'
@@ -64,6 +82,14 @@
       offsetY: 16
       offsetX: -9
     )
+
+    $(".tooltip-fixed").each (_, element) ->
+      tooltipWidth = $(this).attr('data-tooltip-width')
+      $(element).tooltipster(
+        position: 'bottom-right'
+        offsetY: 2
+        fixedWidth: tooltipWidth
+      )
 
     $("#menu-tabs a").click (event) ->
       event.preventDefault()
