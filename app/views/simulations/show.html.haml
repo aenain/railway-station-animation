@@ -133,7 +133,7 @@
         $("#controls, #toolbar, #communication").fadeIn()
         Simulation.events = data.events
         $(window).bind 'keydown.simulation', (event) ->
-            if event.keyCode == 32
-              event.preventDefault()
-              Simulation.togglePlayback()
-              return false
+          if event.keyCode == 32
+            event.preventDefault()
+            Simulation.togglePlayback()
+            return false
