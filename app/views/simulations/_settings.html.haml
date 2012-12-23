@@ -28,6 +28,13 @@
 
           = attribute_range_field(f, :coming_time_span_without_ticket, class: 'slider')
 
+          .label
+            Companions come
+            = hidden_attribute_range_fields(f, :companion_coming_time_span)
+            minutes before a passenger's arrival.
+
+          = attribute_range_field(f, :companion_coming_time_span, class: 'slider')
+
     %li.group
       %ul
         %li{ style: 'width: 30%' }

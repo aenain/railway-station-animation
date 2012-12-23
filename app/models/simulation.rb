@@ -17,8 +17,9 @@ class Simulation < ActiveRecord::Base
     average_probability_of_having_ticket: { default: 50, values: 0..100 }, # percentages
     average_share_of_visitors: { default: 25, values: 0..100 }, # percentages
     cash_desk_count: { default: 6, values: 1..20 },
-    coming_time_span_with_ticket: { default: [15, 45], values: 0..60 }, # minutes
+    coming_time_span_with_ticket: { default: [15, 45], values: 5..60 }, # minutes
     coming_time_span_without_ticket: { default: [15, 50], values: 10..120 }, # minutes
+    companion_coming_time_span: { default: [10, 20], values: 5..60 }, # minutes
     crowd_speed_function: { default: nil, values: CROWD_SPEED_FUNCTIONS.keys },
     default_platform_waiting_time: { default: 10, values: 1..60 }, # minutes
     departuring_passenger_count: { default: [10, 800], values: 0..1_000 },
