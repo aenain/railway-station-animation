@@ -2,7 +2,7 @@ defaults: &defaults
   simulation_program:
     call: "java -jar"
     path: <%= Rails.root.join('simulation.jar') %>
-    options: "-i STDIN -o STDOUT"
+    options: "-i STDIN -o STDOUT -Xmx1024M"
 
 development:
   <<: *defaults
