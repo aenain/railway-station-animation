@@ -3,9 +3,6 @@ RailwayStation::Application.routes.draw do
     member do
       post :result
     end
-    collection do
-      get :test_java
-    end
   end
 
   # The priority is based upon order of creation:
