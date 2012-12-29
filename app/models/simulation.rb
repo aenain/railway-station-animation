@@ -102,6 +102,10 @@ class Simulation < ActiveRecord::Base
     end.first.try(:[], :label)
   end
 
+  def as_json(options = {})
+    super options.reverse_merge(except: [:created_at, :updated_at, :result_filename], root: true)
+  end
+
   # calls a simulation program and sends it a json with parameters with pipe, then it expects
   # data to appear on STDOUT (again with the pipe but in the opposite direction).
   def simulate
@@ -109,8 +113,7 @@ class Simulation < ActiveRecord::Base
     path = build_result_path
 
     IO.popen("#{program["call"]} #{program["path"]} #{program["options"]}", 'w+') do |pipe|
-      config = { simulation: attributes.except("created_at", "updated_at", "id", "result_filename") }
-      pipe.puts(config.to_json)
+      pipe.puts(self.to_json)
       pipe.close_write
 
       Zlib::GzipWriter.open(path) do |gz|
