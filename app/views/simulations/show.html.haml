@@ -11,7 +11,7 @@
       = link_to '', '#', class: 'icon-remove-circle tooltip-fixed', id: 'toggle-messages', title: "Don't show up messages", data: { 'tooltip-width' => 140 }
 
   .controls
-    = text_field_tag 'toolbar-acceleration', @acceleration, data: { min: 10, max: 600 }, class: 'knob-toolbar'
+    = text_field_tag 'toolbar-acceleration', @acceleration, data: { min: 10, max: 1000 }, class: 'knob-toolbar'
     = link_to "", "#", class: 'icon-play play-control', id: 'toolbar-play'
 
 #communication.communication
@@ -37,7 +37,7 @@
       #controls.main-control{ class: @simulation.computed? || "hidden" }
         .label acceleration
         .value
-          = text_field_tag "acceleration", @acceleration, data: { min: 10, max: 600 }, class: 'knob-enabled'
+          = text_field_tag "acceleration", @acceleration, data: { min: 10, max: 1000 }, class: 'knob-enabled'
 
         .button
           = link_to '', '#', id: 'play', class: 'primary icon-play play'
