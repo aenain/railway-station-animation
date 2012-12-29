@@ -50,6 +50,7 @@ root.Simulation =
         else
           clearInterval(interval)
           options.success(data) if typeof options.success == "function"
+      , "json"
     , 1000
 
   initSummary: (data) ->
