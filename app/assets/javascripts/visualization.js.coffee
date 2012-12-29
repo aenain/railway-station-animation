@@ -15,6 +15,8 @@ root.Visualization = class Visualization
 
   constructor: (@events, @acceleration) ->
     @objects = {}
+    @countObjects = {}
+    @clockObjects = []
     @_cacheInfrastructure()
 
   run: ->
@@ -56,13 +58,23 @@ root.Visualization = class Visualization
 
   _cacheInfrastructure: ->
     $("[id^='cash-desk'], [id^='info-desk'], [id^='platform'], [id^='tunnel'], [id^='rail']").each (_, region) =>
-      @objects[region.id] = $(region)
+      if /count$/.test(region.id)
+        @countObjects[region.id] = region
+      else
+        @objects[region.id] = $(region)
 
-    @objects[id] = $("#" + id) for id in ["waiting-room-count", "hall-count"]
+    for id in ["waiting-room-count", "hall-count"]
+      @countObjects[id] = document.getElementById(id)
+
+    $("[id^='simulation-time']").each (_, clock) =>
+      @clockObjects.push(clock)
+
     return
 
   _clearCache: ->
     delete @objects
+    delete @countObjects
+    delete @clockObjects
 
   _updateClock: ->
     time = @simulationTime
@@ -76,7 +88,7 @@ root.Visualization = class Visualization
     minutes = "0#{minutes}" if minutes < 10
     seconds = "0#{seconds}" if seconds < 10
 
-    $("[id^='simulation-time']").text("#{hours}:#{minutes}:#{seconds}")
+    clock.innerText = "#{hours}:#{minutes}:#{seconds}" for clock in @clockObjects
 
   _onTrainArrival: (data) ->
     delayed = Math.round((data.delay.external + data.delay.semaphore) / 60.0) > 0
@@ -86,7 +98,7 @@ root.Visualization = class Visualization
     $train = @_buildTrain $.extend({ delayed: delayed, direction: 'right' }, data)
     $rail.append($train)
     @objects[data.train] = $train
-    @objects["#{data.train}-count"] = $("##{data.train}-count")
+    @countObjects["#{data.train}-count"] = document.getElementById("#{data.train}-count")
 
     @_animateTrainArrival($train, data)
     @_animateTrainDelay(@objects["#{railId}-delay"], { total: data.delay.semaphore + data.delay.external, external: data.delay.external })
@@ -101,18 +113,18 @@ root.Visualization = class Visualization
 
     @_animateTrainDeparture $train, data, =>
       delete @objects[data.train]
-      delete @objects["#{data.train}-count"]
+      delete @countObjects["#{data.train}-count"]
       $train.remove()
 
   _onPeopleChange: (data) ->
-    @objects["#{data.region}-count"].text(data.count)
+    @countObjects["#{data.region}-count"].innerText = data.count
 
   _onTrainChange: (data) ->
     $message = @_buildMessage($.extend({}, data, { delay: Math.round(data.delay / 60.0) }))
     $message.hide().appendTo($("#messages")).fadeIn().delay(Visualization.VISIBLE_TIME.message).fadeOut()
 
   _onWaitingTrainsChange: (data) ->
-    @objects["rail-#{data.platform}-#{data.rail}-waiting-count"].text(data.count)
+    @countObjects["rail-#{data.platform}-#{data.rail}-waiting-count"].innerText = data.count
 
     if data.count > 0
       @objects["rail-#{data.platform}-#{data.rail}-waiting"].removeClass('none')
