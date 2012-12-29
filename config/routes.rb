@@ -5,6 +5,15 @@ RailwayStation::Application.routes.draw do
     end
   end
 
+  namespace :api do
+    resources :simulations, only: [:create] do
+      member do
+        put :upload_json
+        put :upload_gzip
+      end
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

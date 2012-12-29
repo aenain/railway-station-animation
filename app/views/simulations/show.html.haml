@@ -135,10 +135,10 @@
 
     Simulation.getResult "#{result_simulation_path(@simulation)}",
       success: (data) ->
-        Simulation.initSummary(data.summary)
+        Simulation.initSummary(data.simulation.summary)
         $("#no-result").hide()
         $("#controls, #toolbar, #communication").fadeIn()
-        Simulation.events = data.events
+        Simulation.events = data.simulation.events
         $(window).bind 'keydown.simulation', (event) ->
           if event.keyCode == 32 # space
             event.preventDefault()

@@ -75,6 +75,10 @@ class Simulation < ActiveRecord::Base
     RESULT_DIRECTORY.join(result_filename) if result_filename
   end
 
+  def build_result_path
+    RESULT_DIRECTORY.join("#{id}.gz")
+  end
+
   def computed?
     ! result_filename.nil?
   end
@@ -102,10 +106,11 @@ class Simulation < ActiveRecord::Base
   # data to appear on STDOUT (again with the pipe but in the opposite direction).
   def simulate
     program = ::Yetting.simulation_program
-    path = RESULT_DIRECTORY.join("#{id}.gz")
+    path = build_result_path
 
     IO.popen("#{program["call"]} #{program["path"]} #{program["options"]}", 'w+') do |pipe|
-      pipe.puts self.attributes.except("created_at", "updated_at", "id", "result_filename").to_json
+      config = { simulation: attributes.except("created_at", "updated_at", "id", "result_filename") }
+      pipe.puts(config.to_json)
       pipe.close_write
 
       Zlib::GzipWriter.open(path) do |gz|
