@@ -50,6 +50,10 @@
 
 :coffeescript
   $ ->
+    $(document).ajaxSend (e, xhr, options) ->
+      token = $("meta[name='csrf-token']").attr("content")
+      xhr.setRequestHeader("X-CSRF-Token", token)
+
     changeTooltipElementLabel = ($element, label) ->
       if $element.data('title') # set by tooltip
         $(".tooltip-message-content").text(label)
