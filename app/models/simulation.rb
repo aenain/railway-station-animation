@@ -1,4 +1,6 @@
 class Simulation < ActiveRecord::Base
+  RESULT_DIRECTORY = Rails.root.join("public", "simulation", "result")
+
   CROWD_SPEED_FUNCTIONS = {
     "logarithmic" => "Logarithmic"
   }
@@ -38,10 +40,44 @@ class Simulation < ActiveRecord::Base
   }
 
   class_eval do
-    attr_accessible *PARAMETERS.keys
+    single_value_parameters = PARAMETERS.select { |_, attrs| !attrs[:default].is_a?(Array) }.keys
+    range_parameters = (PARAMETERS.keys - single_value_parameters).map do |name|
+      %W[max_#{name} min_#{name}]
+    end.flatten
+
+    attr_accessible *(single_value_parameters + range_parameters)
   end
 
-  serialize :result, JSON
+  def result
+    @result ||= if result_path
+      File.read(result_path)
+    end
+  end
+
+  def decompress_result
+    if result_path
+      Zlib::GzipReader.open(result_path) do |gz|
+        gz.read
+      end
+    end
+  end
+
+  def parse_result
+    decompressed = decompress_result
+    begin
+      JSON.parse(decompressed)
+    rescue JSON::ParserError
+      nil
+    end
+  end
+
+  def result_path
+    RESULT_DIRECTORY.join(result_filename) if result_filename
+  end
+
+  def computed?
+    ! result_filename.nil?
+  end
 
   def self.build_with_defaults
     self.new.tap do |s|
@@ -66,20 +102,22 @@ class Simulation < ActiveRecord::Base
   # data to appear on STDOUT (again with the pipe but in the opposite direction).
   def simulate
     program = ::Yetting.simulation_program
-    raw = ""
+    path = RESULT_DIRECTORY.join("#{id}.gz")
 
     IO.popen("#{program["call"]} #{program["path"]} #{program["options"]}", 'w+') do |pipe|
-      pipe.puts self.attributes.except("created_at", "updated_at", "id", "result").to_json
+      pipe.puts self.attributes.except("created_at", "updated_at", "id", "result_filename").to_json
       pipe.close_write
 
-      begin
-        raw << pipe.read until pipe.eof?
-      rescue IOError
-        pipe.close_read
+      Zlib::GzipWriter.open(path) do |gz|
+        begin
+          gz.write(pipe.read) until pipe.eof?
+        rescue IOError
+          pipe.close_read
+        end
       end
     end
 
-    self.update_column(:result, raw)
+    self.update_column(:result_filename, path.basename.to_s)
   end
   handle_asynchronously :simulate
 

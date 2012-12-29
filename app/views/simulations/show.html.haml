@@ -30,11 +30,11 @@
     %li#settings.settings.tab.hidden= render partial: 'settings', locals: { f: f, read_only: true }
 
     %li#visualization.tab
-      - if @simulation.result.nil?
+      - unless @simulation.computed?
         #no-result
           Simulation is still being computed. Please wait...
 
-      #controls.main-control{ class: @simulation.result.nil? && "hidden" }
+      #controls.main-control{ class: @simulation.computed? || "hidden" }
         .label acceleration
         .value
           = text_field_tag "acceleration", @acceleration, data: { min: 10, max: 600 }, class: 'knob-enabled'

@@ -16,3 +16,4 @@
 
 # Ignore the database configuration file.
 /config/database.yml
+/public/simulation/result/*.gz
