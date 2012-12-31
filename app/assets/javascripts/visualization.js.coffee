@@ -142,7 +142,7 @@ root.Visualization = class Visualization
         </header>
         <ul class="units">
           <li>
-            <span class="icon-user" id="<%= train %>-count"><%= count %></span>
+            <span class="people-count" id="<%= train %>-count"><%= count %></span>
           </li>
         </ul>
       </div>

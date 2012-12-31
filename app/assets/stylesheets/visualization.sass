@@ -78,19 +78,19 @@
   margin: 0 auto
   overflow: visible
 
-.icon-user
+.people-count
   display: inline-block
   white-space: nowrap
   color: $blue // #E66D7B
 
   &:before
-    padding-right: 0.3em
+    padding-right: 0.6em
     color: rgba(0, 0, 0, 0.2)
 
-li span.icon-user
+li span.people-count
   width: auto
 
-.icon-user + .capacity
+.people-count + .capacity
   color: $blue
 
   &:before
@@ -118,14 +118,14 @@ li span.icon-user
 
   .platform
     height: 2em
-    padding: 0.5em 0
+    padding: 0.5em 1em 0 0.5em
     width: 60%
     position: relative
     z-index: 5
     overflow: hidden
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6)
 
-    h2, .icon-user
+    h2, .people-count
       font-size: 1em
       line-height: 1em
 
@@ -134,9 +134,8 @@ li span.icon-user
       margin-left: 1em
       color: black
 
-    .icon-user
+    .people-count
       width: 5em
-      margin-right: 1em
       float: right
       text-align: right
 
@@ -299,13 +298,13 @@ li span.icon-user
     box-shadow: inset 0 0 1em darken($gray, 10%)
     text-align: center
 
-    .icon-user
+    .people-count
       min-width: 3em
       letter-spacing: 1px
       color: #fff
 
       &:before
-        color: rgba(255, 255, 255, 0.4)
+        color: rgba(0, 0, 0, 0.4)
 
 .units
   position: relative
@@ -322,7 +321,6 @@ li span.icon-user
   padding: 0.3em 0 0 0
   @include prefixify(box-sizing, border-box)
   position: relative
-  z-index: 0
   text-align: center
 
   &:before, &:after
@@ -344,7 +342,7 @@ li span.icon-user
     top: -1px
     left: -1px
 
-  .icon-user
+  .people-count
     min-width: 100%
 
 .main-building
@@ -384,3 +382,118 @@ li span.icon-user
       li
         margin-bottom: 1px
         display: inline-block
+
+.with-tooltip
+  position: relative
+
+  &:hover .tip, .tip:hover
+    opacity: 1
+    pointer-events: auto
+
+  .tip
+    width: 12em
+    padding: 0.2em
+    margin-top: 0.15em
+    position: absolute
+    z-index: 20
+    border-radius: 0.2em
+    background-color: rgba(50, 50, 50, 0.85)
+    border: 1px solid #333
+    font-size: 0.8em
+    color: #fff
+    text-shadow: none
+    opacity: 0
+    pointer-events: none
+    @include prefixify(transition, opacity 0.3s ease-in-out) 
+
+    &.bottom, &.right
+      &:after
+        display: none
+
+    &.top, &.left
+      &:before
+        display: none
+
+    &.bottom:before
+      margin-left: 50%
+      top: -0.3em
+      left: -0.3em
+      border-top: 0
+      border-bottom-color: #333
+
+    &.right:before
+      top: 0
+      left: -0.3em
+      border-left: 0
+      border-right-color: #333
+
+    &.left:after
+      top: 0
+      right: -0.3em
+      border-right: 0
+      border-left-color: #333
+
+    &:before, &:after
+      content: ''
+      display: block
+      height: 0
+      width: 0
+      position: absolute
+      border: 0.3em solid transparent
+
+    &.metrics-2
+      width: 8em
+
+    .people-count
+      display: block
+      float: left
+      width: 4em
+      min-width: 4em
+      margin: 0
+      position: relative
+      text-align: center
+      color: #eee
+
+      &:before
+        color: black
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3)
+
+.platform .people-count.with-tooltip .tip
+  top: -0.35em
+  left: -10em
+  padding-top: 0.3em
+
+  &:after
+    top: 0.45em
+
+.tunnel .with-tooltip .tip
+  margin-left: 0.6em
+
+.corridor .with-tooltip .tip
+  margin-left: 50%
+  margin-top: 0
+  left: -6.2em // half of width
+
+  &.metrics-2
+    left: -4.2em
+
+.desks .with-tooltip .tip
+  &.right
+    margin-left: 0.45em
+    left: 100%
+
+    &:before
+      top: 0.55em
+      left: -0.4em
+      border-width: 0.4em 0.4em 0.4em 0
+
+  &.left
+    margin-right: 0.5em
+    right: 100%
+
+    &:after
+      top: 0.55em
+      right: -0.4em
+      border-width: 0.4em 0 0.4em 0.4em
+
+  top: 0.05em

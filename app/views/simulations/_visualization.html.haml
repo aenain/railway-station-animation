@@ -8,22 +8,28 @@
         .rail.up{ id: "rail-#{platform_number}-1" }
           .waiting-trains.none{ id: "rail-#{platform_number}-1-waiting" }
             .icon
-            %span{ id: "rail-#{platform_number}-1-waiting-count" } 1
+            %span{ id: "rail-#{platform_number}-1-waiting-count" } 0
           .total-delay.none{ id: "rail-#{platform_number}-1-delay" }
-            %span.total{ id: "rail-#{platform_number}-1-delay-total" } 30
-            %span.external{ id: "rail-#{platform_number}-1-delay-external" } 24
+            %span.total{ id: "rail-#{platform_number}-1-delay-total" } 0
+            %span.external{ id: "rail-#{platform_number}-1-delay-external" } 0
         .platform
           %h2 Platform #{platform_number}
-          %span.icon-user{ id: "platform-#{platform_number}-count" } 0
+          .people-count.people-icon-companion{ id: "platform-#{platform_number}-count-companions" } 0
+          .people-count.people-icon-passenger{ id: "platform-#{platform_number}-count-passengers" } 0
+
         .rail.down{ id: "rail-#{platform_number}-2" }
           .waiting-trains.none{ id: "rail-#{platform_number}-2-waiting" }
             .icon
-            %span{ id: "rail-#{platform_number}-2-waiting-count" } 2
+            %span{ id: "rail-#{platform_number}-2-waiting-count" } 0
           .total-delay.none{ id: "rail-#{platform_number}-2-delay" }
-            %span.total{ id: "rail-#{platform_number}-2-delay-total" } 30
-            %span.external{ id: "rail-#{platform_number}-2-delay-external" } 24
+            %span.total{ id: "rail-#{platform_number}-2-delay-total" } 0
+            %span.external{ id: "rail-#{platform_number}-2-delay-external" } 0
         .tunnel
-          %span.icon-user{ id: "tunnel-#{platform_number}-count" } 0
+          .with-tooltip
+            .people-count.people-icon-person{ id: "tunnel-#{platform_number}-count" } 0
+            .tip.bottom.metrics-2
+              .people-count.people-icon-passenger{ id: "tunnel-#{platform_number}-count-passengers" } 0
+              .people-count.people-icon-companion{ id: "tunnel-#{platform_number}-count-companions" } 0
 
   .main-building
     .info-office
@@ -31,25 +37,40 @@
         %h2 Information
       %ul.desks
         - (1..@simulation.info_desk_count).reverse_each do |desk_number|
-          %li
-            %span.icon-user{ id: "info-desk-#{desk_number}-count" } 0
+          %li.with-tooltip
+            .people-count.people-icon-person{ id: "info-desk-#{desk_number}-count" } 0
+            .tip.right
+              .people-count.people-icon-passenger{ id: "info-desk-#{desk_number}-count-passengers" } 0
+              .people-count.people-icon-companion{ id: "info-desk-#{desk_number}-count-companions" } 0
+              .people-count.people-icon-visitor{ id: "info-desk-#{desk_number}-count-visitors" } 0
 
     .corridor
-      .waiting-room
+      .waiting-room.with-tooltip
         %header
           %h2 Waiting Room
-        %span.icon-user{ id: "waiting-room-count" } 0
-        %span.capacity= @simulation.waiting_room_capacity
+          %span.people-count.people-icon-person{ id: "waiting-room-count" } 0
+          %span.capacity= @simulation.waiting_room_capacity
+        .tip.bottom.metrics-2
+          .people-count.people-icon-passenger{ id: "waiting-room-count-passengers" } 0
+          .people-count.people-icon-companion{ id: "waiting-room-count-companions" } 0
 
-      .hall
+      .hall.with-tooltip
         %header
           %h2 Hall
-        %span.icon-user{ id: "hall-count" } 0
+          %span.people-count.people-icon-person{ id: "hall-count" } 0
+        .tip.bottom
+          .people-count.people-icon-passenger{ id: "hall-count-passengers" } 0
+          .people-count.people-icon-companion{ id: "hall-count-companions" } 0
+          .people-count.people-icon-visitor{ id: "hall-count-visitors" } 0
 
     .cash-office
       %header
         %h2 Cash Desks
       %ul.desks
         - (1..@simulation.cash_desk_count).reverse_each do |desk_number|
-          %li
-            %span.icon-user{ id: "cash-desk-#{desk_number}-count" } 0
+          %li.with-tooltip
+            .people-count.people-icon-person{ id: "cash-desk-#{desk_number}-count" } 0
+            .tip.left
+              .people-count.people-icon-passenger{ id: "cash-desk-#{desk_number}-count-passengers" } 0
+              .people-count.people-icon-companion{ id: "cash-desk-#{desk_number}-count-companions" } 0
+              .people-count.people-icon-visitor{ id: "cash-desk-#{desk_number}-count-visitors" } 0
