@@ -57,14 +57,11 @@ root.Visualization = class Visualization
     @animationFrame.call(window, callback) # requestAnimationFrame has to be run in the context of window
 
   _cacheInfrastructure: ->
-    $("[id^='cash-desk'], [id^='info-desk'], [id^='platform'], [id^='tunnel'], [id^='rail']").each (_, region) =>
-      if /count$/.test(region.id)
+    $("[id^='cash-desk'], [id^='info-desk'], [id^='platform'], [id^='tunnel'], [id^='rail'], [id^='waiting-room'], [id^='hall']").each (_, region) =>
+      if /count/.test(region.id)
         @countObjects[region.id] = region
       else
         @objects[region.id] = $(region)
-
-    for id in ["waiting-room-count", "hall-count"]
-      @countObjects[id] = document.getElementById(id)
 
     $("[id^='simulation-time']").each (_, clock) =>
       @clockObjects.push(clock)
@@ -117,19 +114,28 @@ root.Visualization = class Visualization
       $train.remove()
 
   _onPeopleChange: (data) ->
-    @countObjects["#{data.region}-count"].innerText = data.count
+    # total amount of people who are important to the region
+    @_updatePeopleCount("#{data.region}-count", data.count)
+    @_updatePeopleCount("#{data.region}-count-passengers", data.passengers)
+    @_updatePeopleCount("#{data.region}-count-companions", data.companions)
+    @_updatePeopleCount("#{data.region}-count-visitors", data.visitors)
 
   _onTrainChange: (data) ->
     $message = @_buildMessage($.extend({}, data, { delay: Math.round(data.delay / 60.0) }))
     $message.hide().appendTo($("#messages")).fadeIn().delay(Visualization.VISIBLE_TIME.message).fadeOut()
 
   _onWaitingTrainsChange: (data) ->
-    @countObjects["rail-#{data.platform}-#{data.rail}-waiting-count"].innerText = data.count
+    @_updatePeopleCount("rail-#{data.platform}-#{data.rail}-waiting-count", data.count)
 
     if data.count > 0
       @objects["rail-#{data.platform}-#{data.rail}-waiting"].removeClass('none')
     else
       @objects["rail-#{data.platform}-#{data.rail}-waiting"].addClass('none')
+
+  _updatePeopleCount: (elementName, count) ->
+    if count?
+      element = @countObjects[elementName]
+      element.innerText = count if element?
 
   _buildTrain: (data) ->
     @trainTemplate ||= _.template """
