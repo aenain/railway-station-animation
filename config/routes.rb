@@ -6,7 +6,7 @@ RailwayStation::Application.routes.draw do
   end
 
   namespace :api do
-    resources :simulations, only: [:show, :create] do
+    resources :simulations, only: [:create, :show, :update] do
       member do
         put :upload_json
         put :upload_gzip
