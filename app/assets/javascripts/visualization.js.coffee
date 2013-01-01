@@ -108,8 +108,6 @@ root.Visualization = class Visualization
     @_animateTrainDelay($delay, data.delay)
 
     @_animateTrainDeparture $train, data, =>
-      delete @objects[data.train]
-      delete @countObjects["#{data.train}-count"]
       $train.remove()
 
   _onPeopleChange: (data) ->
