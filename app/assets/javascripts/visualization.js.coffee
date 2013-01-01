@@ -71,7 +71,6 @@ root.Visualization = class Visualization
   _clearCache: ->
     delete @objects
     delete @countObjects
-    delete @clockObjects
 
   _updateClock: ->
     time = @simulationTime

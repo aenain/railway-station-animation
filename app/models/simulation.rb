@@ -18,7 +18,7 @@ class Simulation < ActiveRecord::Base
     average_probability_of_having_companion: { default: 25, values: 0..100 }, # percentages
     average_probability_of_having_ticket: { default: 50, values: 0..100 }, # percentages
     average_share_of_visitors: { default: 25, values: 0..100 }, # percentages
-    cash_desk_count: { default: 6, values: 1..20 },
+    cash_desk_count: { default: 3, values: 1..20 },
     coming_time_span_with_ticket: { default: [15, 45], values: 5..60 }, # minutes
     coming_time_span_without_ticket: { default: [15, 50], values: 10..120 }, # minutes
     companion_coming_time_span: { default: [10, 20], values: 5..60 }, # minutes
