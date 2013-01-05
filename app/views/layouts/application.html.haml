@@ -3,6 +3,9 @@
   %head
     %title Railway Station Simulation
 
+    = stylesheet_link_tag 'reset', 'slider', 'dropdown', 'simulation', 'font-awesome', 'peopleawesomeicons', 'tooltipster', 'visualization'
+    = javascript_include_tag 'jquery-1.8.3', 'jquery.knob', 'jquery-ui-1.9.2.min', 'jquery.dropdown', 'simulation', 'highcharts', 'highcharts-draggable', 'clock-range', 'jquery.tooltipster.min'
+
     - if content_for? :head
       = yield :head
 
