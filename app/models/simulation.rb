@@ -13,8 +13,7 @@ class Simulation < ActiveRecord::Base
     average_probability_of_complaining: { default: 15, values: 0..100 }, # percentages
     average_probability_of_getting_information: { default: 30, values: 0..100 }, # percentages
     average_probability_of_external_delay: { default: 50, values: 0..100 }, # percentages
-    average_probability_of_having_ticket: { default: 50, values: 0..100 }, # percentages
-    average_share_of_visitors: { default: 25, values: 0..100 }, # percentages
+    average_probability_of_buying_ticket: { default: 50, values: 0..100 }, # percentages
     cash_desk_count: { default: 3, values: 1..20 },
     default_platform_waiting_time: { default: 10, values: 1..60 }, # minutes
     external_delay_info_time_span: { default: 30, values: 1..60 }, # minutes
