@@ -73,315 +73,316 @@
       &:after
         content: ' min'
 
-.station
-  width: 60%
-  margin: 0 auto
-  overflow: visible
-
-.people-count
-  display: inline-block
-  white-space: nowrap
-  color: $blue // #E66D7B
-
-  &:before
-    padding-right: 0.6em
-    color: rgba(0, 0, 0, 0.2)
-
-li span.people-count
-  width: auto
-
-.people-count + .capacity
-  color: $blue
-
-  &:before
-    color: rgba(0, 0, 0, 0.2)
-    content: "of"
-    padding: 0 0.2em
-
-.platform, .tunnel, .main-building
-  background-color: #eee
-  border: 1px solid #ddd
-  box-shadow: inset 0 0 2em #ddd
-  @include prefixify(box-sizing, border-box)
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6)
-  margin: 0 auto
-
-.platforms
-  li
-    list-style: none
-
-    &:last-child .tunnel
-      border-bottom: 0
-
-      &:after
-        display: none
-
-  .platform
-    height: 2em
-    padding: 0.5em 1em 0 0.5em
+.board
+  .station
     width: 60%
-    position: relative
-    z-index: 5
-    overflow: hidden
-    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6)
-
-    h2, .people-count
-      font-size: 1em
-      line-height: 1em
-
-    h2
-      float: left
-      margin-left: 1em
-      color: black
-
-    .people-count
-      width: 5em
-      float: right
-      text-align: right
-
-  .rail
-    background-color: rgba(255, 255, 255, 0.5)
-    height: 1.68em
-    padding: 1px 0
-    @include prefixify(box-sizing, border-box)
-    position: relative
-    z-index: 3
-
-    .waiting-trains, .total-delay
-      font-size: 0.8em
-      height: 1.65em
-      padding-top: 0.35em
-      position: absolute
-
-    .waiting-trains
-      width: 3.4em
-      left: 0
-      padding-left: 0.2em
-      background-color: $danger
-      box-shadow: inset 0 0 1em darken($danger, 10%)
-      color: #fff
-      @include prefixify(transition, left 0.2s ease-in-out)
-
-      &.none
-        left: -3.6em
-
-      &:before
-        content: "+"
-        display: inline-block
-        margin-left: 0.2em
-
-      .icon
-        width: 1.2em
-        height: 1.2em
-        margin-top: 0.05em
-        float: left
-        background: url("/assets/icon-train.png") 0 0 no-repeat
-        background-size: 100% 100%
-
-    .total-delay
-      width: 8em
-      padding-right: 1em
-      right: 0
-      text-align: right
-      color: $danger
-      opacity: 1
-      @include prefixify(transition, opacity 0.2s ease-in-out)
-
-      .external, .total
-        &:before, &:after
-          opacity: 0.4
-
-      .external
-        &:before
-          content: "("
-        &:after
-          content: " min)"
-
-      .total
-        &:before
-          content: "+"
-        &:after
-          content: " min"
-
-      &.none
-        opacity: 0
-
-  .train
-    position: relative
-    z-index: 4
-    overflow: hidden
-    font-size: 0.8em
-    @include prefixify(transition, all 1s ease-in-out) // do not change the duration
-
-    &.to-left
-      left: 20%
-
-      &.arrival
-        left: 100%
-
-      &.departure
-        left: -21em // width of the train + additional em
-
-      .locomotive, .units, .units li
-        float: left
-
-      .locomotive
-        .to
-          float: left
-
-        .from
-          float: right
-
-      .units li
-        margin-left: 1px
-
-    &.to-right
-      right: 20%
-
-      &.arrival
-        right: 100%
-
-      &.departure
-        right: -21em // width of the train + additional em
-
-      .locomotive, .units, .units li
-        float: right
-
-      .locomotive
-        .to
-          float: right
-
-        .from
-          float: left
-
-      .units li
-        margin-right: 1px
-        width: 8em
-
-    .locomotive
-      width: 12em
-      background-color: $fine
-      border: 1px solid darken($fine, 10%)
-      box-shadow: inset 0 0 1em darken($fine, 10%)
-      color: #fff
-      text-align: center
-      position: relative
-      overflow: hidden
-
-      .from
-        top: 0.1764705882em
-        position: relative
-        font-size: 0.85em
-        color: $ecru
-
-    &.delayed
-      .locomotive
-        background-color: $delayed
-        border-color: darken($delayed, 10%)
-        box-shadow: inset 0 0 1em darken($delayed, 10%)
-
-.locomotive, .units li, .desks li
-  height: 2em
-  padding: 0.25em 0.5em
-  @include prefixify(box-sizing, border-box)
-  border-radius: 3px
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1)
-
-.units, .desks
-  li
-    width: 6em
-    height: 2em
-    
-    list-style: none
-    background-color: $gray
-    border: 1px solid darken($gray, 10%)
-    box-shadow: inset 0 0 1em darken($gray, 10%)
-    text-align: center
-
-    .people-count
-      min-width: 3em
-      letter-spacing: 1px
-      color: #fff
-
-      &:before
-        color: rgba(0, 0, 0, 0.4)
-
-.units
-  position: relative
-  overflow: hidden
-  display: block
-
-  li
-    width: 8em
-    height: 2em
-
-.tunnel
-  width: 8em
-  height: 2em
-  padding: 0.3em 0 0 0
-  @include prefixify(box-sizing, border-box)
-  position: relative
-  text-align: center
-
-  &:before, &:after
-    content: ""
-    width: inherit
-    height: 2em
-    display: block
-    position: absolute
-    z-index: 0
-    background-color: #eaeaea
-
-  &:before
-    margin-top: -2em // rail height
-    top: -1px // border
-    left: -1px // border
-
-  &:after
-    margin-top: 2em
-    top: -1px
-    left: -1px
+    margin: 0 auto
+    overflow: visible
 
   .people-count
-    min-width: 100%
+    display: inline-block
+    white-space: nowrap
+    color: $blue // #E66D7B
 
-.main-building
-  width: 60%
-  padding: 1em
-  @include prefixify(box-sizing, border-box)
-  display: table
+    &:before
+      padding-right: 0.6em
+      color: rgba(0, 0, 0, 0.2)
 
-  .corridor, .info-office, .cash-office
-    display: table-cell
-    text-align: center
-    vertical-align: middle
+  li span.people-count
+    width: auto
 
-    h2
-      font-size: 1em
-      color: black
+  .people-count + .capacity
+    color: $blue
 
+    &:before
+      color: rgba(0, 0, 0, 0.2)
+      content: "of"
+      padding: 0 0.2em
 
-  .corridor
-    width: 80%
+  .platform, .tunnel, .main-building
+    background-color: #eee
+    border: 1px solid #ddd
+    box-shadow: inset 0 0 2em #ddd
+    @include prefixify(box-sizing, border-box)
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6)
+    margin: 0 auto
 
-    h2
-      line-height: 1em
+  .platforms
+    li
+      list-style: none
 
-    .waiting-room
-      margin-bottom: 1em
+      &:last-child .tunnel
+        border-bottom: 0
 
-  .cash-office, .info-office
-    width: 20%
+        &:after
+          display: none
 
-    h2
-      line-height: 1em
+    .platform
+      height: 2em
+      padding: 0.5em 1em 0 0.5em
+      width: 60%
+      position: relative
+      z-index: 5
+      overflow: hidden
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6)
 
-    .desks
+      h2, .people-count
+        font-size: 1em
+        line-height: 1em
+
+      h2
+        float: left
+        margin-left: 1em
+        color: black
+
+      .people-count
+        width: 5em
+        float: right
+        text-align: right
+
+    .rail
+      background-color: rgba(255, 255, 255, 0.5)
+      height: 1.68em
+      padding: 1px 0
+      @include prefixify(box-sizing, border-box)
+      position: relative
+      z-index: 3
+
+      .waiting-trains, .total-delay
+        font-size: 0.8em
+        height: 1.65em
+        padding-top: 0.35em
+        position: absolute
+
+      .waiting-trains
+        width: 3.4em
+        left: 0
+        padding-left: 0.2em
+        background-color: $danger
+        box-shadow: inset 0 0 1em darken($danger, 10%)
+        color: #fff
+        @include prefixify(transition, left 0.2s ease-in-out)
+
+        &.none
+          left: -3.6em
+
+        &:before
+          content: "+"
+          display: inline-block
+          margin-left: 0.2em
+
+        .icon
+          width: 1.2em
+          height: 1.2em
+          margin-top: 0.05em
+          float: left
+          background: url("/assets/icon-train.png") 0 0 no-repeat
+          background-size: 100% 100%
+
+      .total-delay
+        width: 8em
+        padding-right: 1em
+        right: 0
+        text-align: right
+        color: $danger
+        opacity: 1
+        @include prefixify(transition, opacity 0.2s ease-in-out)
+
+        .external, .total
+          &:before, &:after
+            opacity: 0.4
+
+        .external
+          &:before
+            content: "("
+          &:after
+            content: " min)"
+
+        .total
+          &:before
+            content: "+"
+          &:after
+            content: " min"
+
+        &.none
+          opacity: 0
+
+    .train
+      position: relative
+      z-index: 4
+      overflow: hidden
       font-size: 0.8em
+      @include prefixify(transition, all 1s ease-in-out) // do not change the duration
 
-      li
-        margin-bottom: 1px
-        display: inline-block
+      &.to-left
+        left: 20%
+
+        &.arrival
+          left: 100%
+
+        &.departure
+          left: -21em // width of the train + additional em
+
+        .locomotive, .units, .units li
+          float: left
+
+        .locomotive
+          .to
+            float: left
+
+          .from
+            float: right
+
+        .units li
+          margin-left: 1px
+
+      &.to-right
+        right: 20%
+
+        &.arrival
+          right: 100%
+
+        &.departure
+          right: -21em // width of the train + additional em
+
+        .locomotive, .units, .units li
+          float: right
+
+        .locomotive
+          .to
+            float: right
+
+          .from
+            float: left
+
+        .units li
+          margin-right: 1px
+          width: 8em
+
+      .locomotive
+        width: 12em
+        background-color: $fine
+        border: 1px solid darken($fine, 10%)
+        box-shadow: inset 0 0 1em darken($fine, 10%)
+        color: #fff
+        text-align: center
+        position: relative
+        overflow: hidden
+
+        .from
+          top: 0.1764705882em
+          position: relative
+          font-size: 0.85em
+          color: $ecru
+
+      &.delayed
+        .locomotive
+          background-color: $delayed
+          border-color: darken($delayed, 10%)
+          box-shadow: inset 0 0 1em darken($delayed, 10%)
+
+  .locomotive, .units li, .desks li
+    height: 2em
+    padding: 0.25em 0.5em
+    @include prefixify(box-sizing, border-box)
+    border-radius: 3px
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1)
+
+  .units, .desks
+    li
+      width: 6em
+      height: 2em
+
+      list-style: none
+      background-color: $gray
+      border: 1px solid darken($gray, 10%)
+      box-shadow: inset 0 0 1em darken($gray, 10%)
+      text-align: center
+
+      .people-count
+        min-width: 3em
+        letter-spacing: 1px
+        color: #fff
+
+        &:before
+          color: rgba(0, 0, 0, 0.4)
+
+  .units
+    position: relative
+    overflow: hidden
+    display: block
+
+    li
+      width: 8em
+      height: 2em
+
+  .tunnel
+    width: 8em
+    height: 2em
+    padding: 0.3em 0 0 0
+    @include prefixify(box-sizing, border-box)
+    position: relative
+    text-align: center
+
+    &:before, &:after
+      content: ""
+      width: inherit
+      height: 2em
+      display: block
+      position: absolute
+      z-index: 0
+      background-color: #eaeaea
+
+    &:before
+      margin-top: -2em // rail height
+      top: -1px // border
+      left: -1px // border
+
+    &:after
+      margin-top: 2em
+      top: -1px
+      left: -1px
+
+    .people-count
+      min-width: 100%
+
+  .main-building
+    width: 60%
+    padding: 1em
+    @include prefixify(box-sizing, border-box)
+    display: table
+
+    .corridor, .info-office, .cash-office
+      display: table-cell
+      text-align: center
+      vertical-align: middle
+
+      h2
+        font-size: 1em
+        color: black
+
+
+    .corridor
+      width: 80%
+
+      h2
+        line-height: 1em
+
+      .waiting-room
+        margin-bottom: 1em
+
+    .cash-office, .info-office
+      width: 20%
+
+      h2
+        line-height: 1em
+
+      .desks
+        font-size: 0.8em
+
+        li
+          margin-bottom: 1px
+          display: inline-block
 
 .with-tooltip
   position: relative
