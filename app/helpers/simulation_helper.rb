@@ -12,7 +12,20 @@ module SimulationHelper
     values = %w[min max].map do |prefix|
       form_builder.object.send("#{prefix}_#{attribute_name}")
     end
-    content_tag(:div, nil, id: attribute_name, class: options[:class], data: { min: range.first, max: range.last, values: values })
+
+    render partial: "/shared/range", locals: {
+      values: values,
+      range: range,
+      attribute: attribute_name,
+      options: options
+    }
+  end
+
+  def attribute_clock_range_field(form_builder, attribute_name, options = {})
+    render partial: "/shared/clock_range", locals: {
+      f: form_builder,
+      attribute: attribute_name
+    }
   end
 
   def attribute_field(form_builder, attribute_name, options = {})

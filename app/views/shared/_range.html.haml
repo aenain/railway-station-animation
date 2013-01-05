@@ -1,0 +1,7 @@
+- orientation = options[:orientation] || "horizontal"
+.range-container
+  %div{ class: options[:class], id: attribute, data: { orientation: orientation, min: range.first, max: range.last, values: values } }
+  - if orientation == "horizontal"
+    .range-values
+      .range-min-value= range.first
+      .range-max-value= range.last
