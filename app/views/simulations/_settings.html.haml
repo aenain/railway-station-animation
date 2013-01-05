@@ -1,217 +1,404 @@
-- 2.times do
-  %br/
-
-%section.passenger
-  %ul.params
-    %li.group
+%nav
+  %ul
+    %li.active.section
+      = link_to '', '#', class: 'icon-user', title: 'People'
       %ul
-        %li{ style: 'width: 30%' }
-          .param
-            .before
-              %span.nowrap Probability of
-              %span.nowrap having a ticket
+        %li.active.page= link_to 'Coming Time', '#'
+        %li.page= link_to 'Amount', '#'
+        %li.page= link_to 'Walking', '#'
+        %li.page= link_to 'Activities', '#'
+    %li.section
+      = link_to '#', title: 'Trains' do
+        = image_tag '/assets/icon-train.png', height: '60%', style: 'margin-top: 10%; opacity: 0.7'
 
-            = attribute_field(f, :average_probability_of_having_ticket, class: 'knob')
-
-        %li{ style: 'width: 70%' }
-          .label
-            People with tickets come
-            = hidden_attribute_range_fields(f, :coming_time_span_with_ticket)
-            minutes before a train.
-
-          = attribute_range_field(f, :coming_time_span_with_ticket, class: 'slider')
-
-          .label
-            People without tickets come
-            = hidden_attribute_range_fields(f, :coming_time_span_without_ticket)
-            minutes before a train.
-
-          = attribute_range_field(f, :coming_time_span_without_ticket, class: 'slider')
-
-          .label
-            Companions come
-            = hidden_attribute_range_fields(f, :companion_coming_time_span)
-            minutes before a passenger's arrival.
-
-          = attribute_range_field(f, :companion_coming_time_span, class: 'slider')
-
-    %li.group
       %ul
-        %li{ style: 'width: 30%' }
-          .param
-            .before
-              %span.nowrap Probability of
-              %span.nowrap complaining
-            = attribute_field(f, :average_probability_of_complaining, class: 'knob-danger')
+        %li.active.page= link_to 'Delays & Scheduling', '#'
+    %li.section
+      = link_to '', '#', class: 'icon-sitemap', title: 'Structure'
+      %ul
+        %li.active.page= link_to 'Structure', '#'
 
-        %li{ style: 'width: 70%' }
+.settings-container
+  %ul.tabs
+    %li.container
+      %ul.params
+        %li.group
+          %header
+            Passengers & Companions
+
+          %ul.params-3.wide
+            %li.param.with-clock
+              .before
+                %span.nowrap Passengers without
+                %br
+                %span.nowrap tickets come
+              = hidden_attribute_range_fields(f, :coming_time_span_without_ticket)
+              = attribute_clock_range_field(f, :coming_time_span_without_ticket)
+              .after
+                before train's departure.
+            %li.param.with-clock
+              .before
+                %span.nowrap Passengers with
+                %br
+                %span.nowrap tickets come
+              = hidden_attribute_range_fields(f, :coming_time_span_with_ticket)
+              = attribute_clock_range_field(f, :coming_time_span_with_ticket)
+              .after
+                %span.nowrap before train's departure.
+            %li.param.with-clock
+              .before
+                %span.nowrap Companions
+                %br
+                %span.nowrap come
+              = hidden_attribute_range_fields(f, :companion_coming_time_span)
+              = attribute_clock_range_field(f, :companion_coming_time_span)
+              .after
+                %span.nowrap before passenger's arrival
+                %br
+                %span.nowrap or with him.
+
+        %li.group
+          %header
+            %span.people-icon-visitor Visitors
+          %ul.params
+            %li.param
+              = f.hidden_field :visitor_coming_distribution
+              #visitor-coming-frequency{ style: 'height: 300px' }
+
+    %li.container
+      %ul.params
+        %li.group
+          %header
+            %span Arrivals & Departures
+          %ul
+            %li.param.narrow
+              .label
+                = hidden_attribute_range_fields(f, :arriving_passenger_count)
+                passengers can arrive
+                in a single train.
+
+              = attribute_range_field(f, :arriving_passenger_count, class: 'slider')
+
+            %li.param.narrow
+              .label
+                = hidden_attribute_range_fields(f, :departuring_passenger_count)
+                passengers can departure
+                in a single train.
+
+              = attribute_range_field(f, :departuring_passenger_count, class: 'slider')
+
+        %li
+          %header
+            %span.people-icon-companion Companions
+
+          = f.hidden_field :companion_count_distribution
+          #companion-count{ style: 'height: 300px' }
+
+    %li.container
+      %ul.params
+        %li.group
+          %header Time Constraints
+          %ul.params-2.wide
+            %li.param
+              .before
+                %span.nowrap Go to the waiting room
+                %br
+                %span.nowrap when more than
+
+              = attribute_field(f, :go_to_waiting_room_min_time_span, class: 'knob')
+              .after minutes to the train.
+
+            %li.param
+              .before
+                %span.nowrap Go to the platform
+                %br
+                %span.nowrap when less than
+              = attribute_field(f, :go_to_platform_max_time_span, class: 'knob')
+              .after minutes to the train.
+
+        %li
+          %header How fast can people walk?
+          = f.hidden_field :crowd_speed_distribution
+          #walking-speed{ style: 'height: 300px' }
+
+    %li.container
+      %ul.params
+        %li.group
+          %header Cash Desks
+          %ul.params-2.wide
+            %li.param
+              .before
+                %span.nowrap How many passengers and visitors
+                %br
+                %span.nowrap
+                  buy tickets?
+                  %span.hint out of 100
+
+              = attribute_field(f, :average_probability_of_having_ticket, class: 'knob')
+            %li.param
+              .before
+                %span.nowrap How long does it take?
+              = hidden_attribute_range_fields(f, :selling_ticket_time)
+              = attribute_clock_range_field(f, :selling_ticket_time)
+
+        %li.group
+          %header Information Desks
+          %ul.params-3
+            %li.param
+              .before
+                %span.nowrap How many passengers and visitors
+                %br
+                %span.nowrap
+                  need informations?
+                  %span.hint out of 100
+              = attribute_field(f, :average_probability_of_getting_information, class: 'knob')
+            %li.param
+              .before
+                %span.nowrap How many people
+                %br
+                %span.nowrap
+                  complain?
+                  %span.hint out of 100
+              = attribute_field(f, :average_probability_of_complaining, class: 'knob')
+            %li.param
+              .before
+                %span.nowrap How long does it take?
+              = hidden_attribute_range_fields(f, :serving_information_time)
+              = attribute_clock_range_field(f, :serving_information_time)
+
+    %li.container
+      %ul.params
+        %li.group
+          %header External Delay
+          %ul.params-2.wide
+            %li.param
+              .before
+                %span.nowrap How many trains
+                %br
+                %span.nowrap
+                  have external delay?
+                  %span.hint out of 100
+              = attribute_field(f, :average_probability_of_external_delay, class: 'knob')
+            %li.param
+              .before
+                %span.nowrap How big can it be?
+              = hidden_attribute_range_fields(f, :external_delay)
+              = attribute_clock_range_field(f, :external_delay)
+
+        %li.group
+          %header Scheduling
+          %ul.params-3.wide
+            %li.param
+              .before
+                Train's external delay is known
+              = attribute_field(f, :external_delay_info_time_span, class: 'knob')
+              .after
+                minutes before the scheduled semaphore arrival time.
+            %li.param
+              .before
+                Train needs
+              = attribute_field(f, :internal_arrival_time, class: 'knob')
+              .after
+                %span.nowrap minutes to ride from
+                %span.nowrap the semaphore to its platform.
+
+            %li.param
+              .before
+                Train arrives
+              = attribute_field(f, :default_platform_waiting_time, class: 'knob')
+              .after
+                minutes before leaving if arrival or departure time is undefined.
+
+        %li
+          - if read_only
+            .cd-dropdown
+              %span= Simulation::SCHEDULING_ALGORITHMS[f.object.scheduling_algorithm] || "None of the algorithms has been chosen."
+
+          - else
+            = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.to_a.map(&:reverse), prompt: 'Choose a scheduling algorithm'
+
+    %li.container
+      %ul.params
+        %li.platform
+          .param
+            = attribute_field(f, :platform_count, class: 'knob-big')
           .label
-            Serving informations takes
-            = hidden_attribute_range_fields(f, :serving_information_time)
-            minutes.
+            Platforms
 
-          = attribute_range_field(f, :serving_information_time, class: 'slider')
+        %li#simulation_subway.tunnel.resizable.with-tooltip{ class: read_only && 'resizable-disabled' }
+          %header Subway
+          %span.height.size
+            - range = Simulation::PARAMETERS[:subway_length][:values]
+            = f.text_field :subway_length, disabled: true, data: { min: range.first, max: range.last }
+            m
+          %span.width.size
+            - range = Simulation::PARAMETERS[:subway_width][:values]
+            = f.text_field :subway_width, disabled: true, data: { min: range.first, max: range.last }
+            m
+          .tip.right
+            Minimal Walking Time:
+            %br
+            #simulation_subway_walking_time.walking-time 0
 
-          .label
-            Selling tickets takes
-            = hidden_attribute_range_fields(f, :selling_ticket_time)
-            minutes.
 
-          = attribute_range_field(f, :selling_ticket_time, class: 'slider')
+        %li.main-building
+          %ul.params
+            %li.param
+              = attribute_field(f, :waiting_room_capacity, class: 'knob')
+              .after
+                Waiting Room Capacity
+            %li.desks
+              %ul.params
+                %li.param
+                  = attribute_field(f, :cash_desk_count, class: 'knob-small')
+                  .after
+                    Cash Desks
+                %li.param
+                  = attribute_field(f, :info_desk_count, class: 'knob-small')
+                  .after
+                    Information Desks
 
-    - 4.times do
-      %br/
+            %li#simulation_hall.hall.resizable.with-tooltip{ class: read_only && 'resizable-disabled', data: { 'preserve-ratio' => 1 }}
+              %header Hall
+              %span.height.size
+                - range = Simulation::PARAMETERS[:hall_length][:values]
+                = f.text_field :hall_length, disabled: true, data: { min: range.first, max: range.last }
+                m
+              %span.width.size
+                - range = Simulation::PARAMETERS[:hall_width][:values]
+                = f.text_field :hall_width, disabled: true, data: { min: range.first, max: range.last }
+                m
+              .tip.right
+                Minimal Walking Time:
+                %br
+                #simulation_hall_walking_time.walking-time 0
 
-    %li.group
-      %ul.params-2
-        %li
-          .param
-            .before
-              %span.nowrap Go to the waiting room
-              %span.nowrap when more than
 
-            = attribute_field(f, :go_to_waiting_room_min_time_span, class: 'knob')
-            .after minutes to the train.
-          
+  .actions
+    = link_to 'Go Back', '#', class: 'prev'
+    = link_to 'Continue', '#', class: 'next'
 
-        %li
-          .param
-            .before
-              %span.nowrap Go to the platform
-              %span.nowrap when less than
-            = attribute_field(f, :go_to_platform_max_time_span, class: 'knob')
-            .after minutes to the train.
+:coffeescript
+  ClockRange.defaults.label.font = "normal 16px 'League Gothic'"
+  disabled = #{nested_options_for_javascript(read_only)}
 
-    %li.group
-      %ul.params-2
-        %li
-          .param
-            .before
-              %span.nowrap Probability of
-              %span.nowrap having companions
-            = attribute_field(f, :average_probability_of_having_companion, class: 'knob')
+  $ ->
+    Simulation.initFields({ disabled: disabled })
+    Simulation.initSettingsNavigation()
 
-        %li
-          .param
-            .before
-              %span.nowrap Maximum
-              %br/
-              %span.nowrap companions
-            = attribute_field(f, :max_companion_count, class: 'knob')
+    # visitor coming chart
+    data = #{nested_options_for_javascript(f.object.visitor_coming_distribution)}
+    categories = []
+    for hour in [0...24] by 2
+      data[hour/2] = {
+        y: data[hour/2]
+        name: hour + ":00" + " to " + (hour + 2) + ":00"
+      }
+      categories.push hour + ":00" + "<br />to<br />" + (hour + 2) + ":00"
 
-    - 4.times do
-      %br/
+    Simulation.initVisitorComingChart({
+      chart:
+        renderTo: 'visitor-coming-frequency'
+        marginBottom: 70
+      title:
+        text: "Coming Distribution"
+      yAxis:
+        min: 0
+        max: 100
+        title:
+          text: "Visitors"
+      xAxis:
+        categories: categories
+      tooltip:
+        yDecimals: 0
+      series: [{
+        data: data
+        name: 'Visitors'
+        draggableY: !disabled
+        type: 'spline'
+      }]
+    }, disabled)
 
-    %li
-      .param
-        .before
-          %span.nowrap Share of people who are not interested in the particular train.
-          %br/
-          %span.nowrap They come to get some informations and/or buy tickets.
-        = attribute_field(f, :average_share_of_visitors, class: 'knob-big')
+    Simulation.initCompanionCountChart({
+      chart:
+        renderTo: 'companion-count'
+      title:
+        text: "Passenger's Companions Distribution"
+      yAxis:
+        min: 0
+        labels:
+          style:
+            display: 'none'
+        title:
+          text: "Probability"
+      xAxis:
+        allowDecimals: false
+        title:
+          text: "Companions"
+      tooltip:
+        formatter: ->
+          weights = 0
+          weights += weight for weight in this.series.yData
+          weight = this.point.y
 
-- 4.times do
-  %br/
+          label = "<b>" + Number(weight / weights * 100).toFixed(1) + "%</b> of passengers<br /> have <b>" + this.point.x + "</b> "
+          label += if this.point.x == 1 then "companion" else "companions"
+          label
 
-%section.train
-  %ul.params
-    %li
-      .label
-        = hidden_attribute_range_fields(f, :arriving_passenger_count)
-        people arrive to the station in a single train.
+      series: [{
+        data: #{nested_options_for_javascript(f.object.companion_count_distribution)}
+        name: 'Companions'
+        draggableY: !disabled
+        type: 'spline'
+      }]
+    }, disabled)
 
-      = attribute_range_field(f, :arriving_passenger_count, class: 'slider')
+    Simulation.initWalkingSpeedChart({
+      chart:
+        renderTo: 'walking-speed'
+        marginBottom: 40
+      title:
+        text: " "
+      yAxis:
+        min: 0
+        max: 15
+        title:
+          text: "Walking Speed [km/h]"
+      xAxis:
+        allowDecimals: false
+        min: 1
+        title:
+          text: "People On Square Meter"
+      series: [{
+        data: #{nested_options_for_javascript(f.object.crowd_speed_distribution)}
+        name: 'Speed'
+        draggableY: !disabled
+        type: 'line'
+      }]
+      tooltip:
+        formatter: ->
+          '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + Number(this.point.y).toFixed(1) + ' km/h</b>'
+    }, disabled)
 
-    %li
-      .label
-        = hidden_attribute_range_fields(f, :departuring_passenger_count)
-        people departure from the station in a single train.
-
-      = attribute_range_field(f, :departuring_passenger_count, class: 'slider')
-
-    %li
-      .label
-        Trains can be delayed
-        = hidden_attribute_range_fields(f, :external_delay)
-        minutes before they get to the station's semaphore.
-
-      = attribute_range_field(f, :external_delay, class: 'slider')
-
-    %li.group
-      %ul.params-4
-        %li
-          .param
-            .before
-              %span.nowrap Probability of train's
-              %span.nowrap external delay
-            = attribute_field(f, :average_probability_of_external_delay, class: 'knob')
-
-        %li
-          .param
-            .before
-              Train's external delay is known
-            = attribute_field(f, :external_delay_info_time_span, class: 'knob')
-            .after
-              minutes before the scheduled semaphore arrival time.
-
-        %li
-          .param
-            .before
-              Train needs
-            = attribute_field(f, :internal_arrival_time, class: 'knob')
-            .after
-              minutes to ride from the semaphore to its platform.
-
-        %li
-          .param
-            .before
-              Train arrives
-            = attribute_field(f, :default_platform_waiting_time, class: 'knob')
-            .after
-              minutes before leaving if arrival or departure time is undefined.
-
-    %li
-      .label
-        - if read_only
-          .cd-dropdown
-            %span= f.object.scheduling_algorithm || "None of the algorithms has been chosen."
-
-        - else
-          = f.select :scheduling_algorithm, Simulation::SCHEDULING_ALGORITHMS.to_a.map(&:reverse), prompt: 'Choose a scheduling algorithm'
-
-- 4.times do
-  %br/
-
-%section.variables
-  %ul.params
-    %li.group
-      %ul.params-3
-        %li
-          .param
-            .before
-              Platforms
-            = attribute_field(f, :platform_count, class: 'knob')
-        %li
-          .param
-            .before
-              Info desks
-            = attribute_field(f, :info_desk_count, class: 'knob')
-        %li
-          .param
-            .before
-              Cash desks
-            = attribute_field(f, :cash_desk_count, class: 'knob')
-
-    %li
-      .param
-        .before
-          %span.nowrap Waiting room
-          %span.nowrap capacity
-        = attribute_field(f, :waiting_room_capacity, class: 'knob-big')
+    $("#settings nav .tooltip").tooltipster(
+      position: 'bottom'
+      offsetY: 2
+    )
 
 - unless read_only
   :coffeescript
     $ ->
+      Simulation.bind 'submit', ($form) ->
+        # dump data from charts
+        $("#simulation_visitor_coming_distribution").val(Simulation.getVisitorComingDistribution())
+        $("#simulation_crowd_speed_distribution").val(Simulation.getWalkingSpeedDistribution())
+        $("#simulation_companion_count_distribution").val(Simulation.getCompanionCountDistribution())
+
+        # enable fields, because disabled ones are not serialized
+        $("#simulation_subway_length, #simulation_subway_width, #simulation_hall_length, #simulation_hall_width").prop('disabled', false)
+
+        $form.submit()
+
       $('#simulation_scheduling_algorithm').dropdown(
         gutter: 0
         stack: false

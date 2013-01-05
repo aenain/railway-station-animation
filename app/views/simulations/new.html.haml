@@ -1,12 +1,5 @@
 = form_for @simulation do |f|
-  #settings.settings
-    = render partial: 'settings', locals: { f: f, read_only: false }
-
-  - 2.times do
-    %br/
-
-  .actions
-    = f.submit 'Simulate', class: 'primary'
+  #settings.settings= render partial: 'settings', locals: { f: f, read_only: false }
 
 :coffeescript
   $ ->

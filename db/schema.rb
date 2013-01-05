@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121228221851) do
+ActiveRecord::Schema.define(:version => 20130104231420) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -41,8 +41,6 @@ ActiveRecord::Schema.define(:version => 20121228221851) do
     t.integer  "max_arriving_passenger_count"
     t.integer  "min_departuring_passenger_count"
     t.integer  "max_departuring_passenger_count"
-    t.integer  "max_companion_count"
-    t.integer  "average_probability_of_having_companion"
     t.integer  "average_probability_of_complaining"
     t.integer  "average_probability_of_having_ticket"
     t.integer  "min_serving_information_time"
@@ -56,9 +54,8 @@ ActiveRecord::Schema.define(:version => 20121228221851) do
     t.integer  "cash_desk_count"
     t.string   "scheduling_algorithm"
     t.integer  "waiting_room_capacity"
-    t.string   "crowd_speed_function"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.integer  "default_platform_waiting_time"
     t.integer  "min_external_delay"
     t.integer  "max_external_delay"
@@ -66,6 +63,14 @@ ActiveRecord::Schema.define(:version => 20121228221851) do
     t.integer  "min_companion_coming_time_span"
     t.integer  "max_companion_coming_time_span"
     t.string   "result_filename"
+    t.binary   "companion_count_distribution"
+    t.binary   "crowd_speed_distribution"
+    t.binary   "visitor_coming_distribution"
+    t.integer  "subway_width"
+    t.integer  "subway_length"
+    t.integer  "hall_width"
+    t.integer  "hall_length"
+    t.integer  "average_probability_of_getting_information"
   end
 
 end

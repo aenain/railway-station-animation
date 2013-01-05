@@ -14,18 +14,18 @@
   %ul#messages
 
 %ul#menu-tabs.menu
-  %li
-    = link_to 'Parameters', '#settings', class: 'icon-cogs'
   %li.active
+    = link_to 'Parameters', '#settings', class: 'icon-cogs'
+  %li
     = link_to 'Visualization', '#visualization', class: 'icon-film'
   %li
     = link_to 'Summary', '#summary', class: 'icon-file'
 
 = form_for @simulation do |f|
   %ul#tabs.tabs
-    %li#settings.settings.tab.hidden= render partial: 'settings', locals: { f: f, read_only: true }
+    %li#settings.settings.tab= render partial: 'settings', locals: { f: f, read_only: true }
 
-    %li#visualization.tab
+    %li#visualization.tab.hidden
       - unless @simulation.computed?
         #no-result
           Simulation is still being computed. Please wait...
@@ -98,6 +98,12 @@
       $("#tabs .tab").addClass('hidden')
       $($this.attr('href')).removeClass('hidden')
       $this.parent().addClass('active')
+
+    # HACK! this time it makes Highcharts render properly.
+    # Highcharts doesn't render on elements that are hidden I suppose.
+    setTimeout ->
+      $("#menu-tabs a").eq(1).trigger('click')
+    , 1
 
     $play = $("#play, #toolbar-play")
     $acceleration = $("#acceleration, #toolbar-acceleration")
