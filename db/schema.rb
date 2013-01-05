@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130105115252) do
+ActiveRecord::Schema.define(:version => 20130105142027) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -65,10 +65,10 @@ ActiveRecord::Schema.define(:version => 20130105115252) do
     t.binary   "companion_count_distribution"
     t.binary   "crowd_speed_distribution"
     t.binary   "visitor_coming_distribution"
-    t.integer  "subway_width"
-    t.integer  "subway_length"
-    t.integer  "hall_width"
-    t.integer  "hall_length"
+    t.float    "subway_width"
+    t.float    "subway_length"
+    t.float    "hall_width"
+    t.float    "hall_length"
     t.integer  "average_probability_of_getting_information"
   end
 
