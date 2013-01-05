@@ -9,6 +9,9 @@
     = csrf_meta_tags
 
   %body
+    - if flash[:error]
+      .flash.error= flash[:error]
+
     %header#header
       %h1
         %span Railway Station

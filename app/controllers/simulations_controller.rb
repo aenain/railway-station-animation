@@ -9,6 +9,7 @@ class SimulationsController < ApplicationController
       @simulation.simulate
       redirect_to @simulation
     else
+      flash[:error] = "Error: #{@simulation.errors.full_messages.join(', ')}"
       render :new
     end
   end

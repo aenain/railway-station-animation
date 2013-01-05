@@ -19,6 +19,23 @@ a
 ul li
   list-style: none
 
+.flash
+  width: 100%
+  top: 0
+  padding: 1em
+  position: fixed
+  z-index: 1000
+  text-align: center
+  font: normal 1.2em 'Lucida Grande', 'Trebuchet MS', sans-serif
+  letter-spacing: -1px
+  @include prefixify(box-sizing, border-box)
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4)
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5)
+
+  &.error
+    background-color: $danger
+    color: white
+
 .hidden
   display: none
 
@@ -334,16 +351,25 @@ h2
     .after
       padding-top: 0.2em
 
-  .label, .param
-    font-family: 'League Gothic'
+  .label, .param, .before, .after
+    font-family: 'Lucida Grande', 'Trebuchet MS', sans-serif
     font-size: 1em
     color: $gray
     text-align: center
-    line-height: 1em
+    line-height: 1.2em
     letter-spacing: -1px
 
     .value
       color: $blue
+
+    .hint
+      font-size: 0.7em
+      color: lighten($gray, 40%)
+
+      &:before
+        content: '('
+      &:after
+        content: ')'
 
   input.value
     -webkit-appearance: none
@@ -361,6 +387,27 @@ h2
   .slider + .label
     margin-top: 0.8em
 
+  header
+    margin: 1em 0 0.5em
+    width: 100%
+    background-color: rgba(0, 0, 0, 0.01)
+    color: $gray
+    font-size: 2em
+    line-height: 1em
+    padding: 0.5em
+    position: relative
+    left: -0.5em
+    font-family: 'League Gothic'
+    text-transform: uppercase
+    text-shadow: 0 1px 0 #fff
+
+    [class^="people-icon-"], [class*=" people-icon-"]
+      &:before
+        padding-right: 0.5em
+
+  &:first-child header
+    margin-top: 0
+
   .group
     width: 100%
     padding: 0.5em 0
@@ -372,6 +419,9 @@ h2
       &.params-2
         width: 60%
         margin: 0 auto
+
+        &.wide
+          width: 80%
 
         & > *
           width: 50%
@@ -386,6 +436,9 @@ h2
         width: 80%
         margin: 0 auto
 
+        &.wide
+          width: 100%
+
         & > *
           width: 33.33333333%
 
@@ -393,29 +446,276 @@ h2
         display: table-cell
         vertical-align: top
 
+        &.narrow
+          display: block
+          width: 60%
+
         .param
           max-width: 8em
           margin: 0 auto
 
+          .with-clock
+            .before, .after
+              display: block
+
+  .range-container
+    padding: 0 1em
+
+    .range-values
+      opacity: 0
+      @include prefixify(transition, opacity 0.3s linear)
+
+    &:hover .range-values
+      opacity: 1
+
   .slider
     width: 100%
     height: 0.8em
-    background-color: rgba(255, 255, 255, 0.7)
+    background-color: rgb(255, 255, 255)
     border-radius: 0.5em
+    border: 1px solid darken($ecru, 3%)
+    border-width: 1px 1px 0 1px
     margin: 0.3em auto
-
-    .ui-slider-range
-      height: 100%
-      background-color: $gray
+    position: relative
 
     .ui-slider-handle
       background-color: $blue
       border-radius: 50%
-      top: -.2em
+      cursor: pointer
+      box-shadow: inset 0 0 0.4em darken($blue, 10%)
+
+    .ui-slider-range
+      background-color: $gray
+
+    &.ui-slider-vertical
+      height: 100%
+      width: 0.8em
+
+      .ui-slider-handle
+        left: -.2em
+
+      .ui-slider-range
+        width: 100%
+
+    &.ui-slider-horizontal
+      .ui-slider-range
+        height: 100%
+
+      .ui-slider-handle
+        top: -.2em
 
     &.ui-disabled
       .ui-slider-handle
         background-color: $disabledBlue
+        box-shadow: inset 0 0 0.4em darken($disabledBlue, 10%)
+
+    & + .range-values
+      margin-top: 0.4em
+      position: relative
+      overflow: hidden
+
+      .range-min-value, .range-max-value
+        font-size: 16px
+        opacity: 0.6
+        font-family: 'League Gothic'
+
+      .range-min-value
+        float: left
+      .range-max-value
+        float: right
+
+  .clock-range-container
+    display: inline-block
+    overflow: visible
+    position: relative
+    padding: 0 1em
+
+    canvas
+
+    .range-container
+      height: 120px
+      right: -1em
+      top: 0
+      padding: 0.5em 0.2em 0
+      position: absolute
+      opacity: 0
+      @include prefixify(transition, opacity 0.3s ease-in-out)
+
+    &:hover .range-container, .range-container:hover
+      opacity: 1
+
+    &.clock-disabled:hover .range-container, &.clock-disabled .range-container:hover
+      opacity: 0
+
+  .resizable.ui-resizable
+    position: relative
+
+    &.with-tooltip
+      .tip.right
+        margin-top: 50%
+        top: -1.5em
+        right: -13.4em
+
+        &:before
+          top: 1.2em
+          left: -0.5em
+          border-width: 0.5em
+
+    .ui-resizable-handle
+      position: absolute
+      display: block
+
+    .ui-resizable-s
+      cursor: s-resize
+      height: 14px
+      width: 100%
+      bottom: -6px
+      left: 0
+    .ui-resizable-e
+      cursor: e-resize
+      width: 14px
+      right: -6px
+      top: 0
+      height: 100%
+    .ui-resizable-se
+      cursor: se-resize
+      width: 22px
+      height: 22px
+      right: 1px
+      bottom: 0
+
+    header
+      position: relative
+      top: 0.5em
+
+    &:hover, &.ui-resizable-resizing
+      .size
+        opacity: 1
+
+    .size
+      position: absolute
+      font-family: 'League Gothic'
+      font-size: 1.2em
+      color: $gray
+      opacity: 0
+      @include prefixify(transition, opacity 0.3s ease-in-out)
+
+      input
+        -webkit-appearance: none
+        border: 0
+        background: transparent
+        display: inline-block
+        color: inherit
+        font: inherit
+        width: 0.7em
+
+      &:before, &:after
+        position: relative
+        font-family: FontAwesome
+        text-align: center
+        font-size: 0.5em
+        color: lighten($gray, 40%)
+
+      &.height
+        left: 0.4em
+        line-height: 1em
+        top: 35%
+
+        &:before, &:after
+          height: 1em
+          display: block
+
+        &:before
+          content: "\f062"
+          padding-bottom: 0.4em
+
+        &:after
+          content: "\f063"
+          position: relative
+          top: -0.5em
+
+      &.width
+        right: 35%
+        bottom: 0.2em
+
+        &:before, &:after
+          top: -0.3em
+
+        &:before
+          content: "\f060"
+          padding-right: 0.3em
+
+        &:after
+          content: "\f061"
+          padding-left: 0.3em
+
+    .ui-icon
+      text-indent: 0
+      font-size: 24px
+      color: $blue
+      @include prefixify(transform, rotate(45deg))
+
+      &:before
+        font-family: 'FontAwesome'
+        content: '\f061'
+
+    &.resizable-disabled .ui-icon
+      color: $gray
+
+  .platform, .tunnel, .hall, .main-building
+    border: 1px solid rgba(225, 225, 225, 0.5)
+    background-color: rgba(240, 240, 240, 0.5)
+    box-shadow: inset 0 0 2em rgba(225, 225, 225, 0.5)
+    margin: 0 auto
+
+    header, .params .before, .params .after, .params .label
+      color: $gray
+      font-family: 'League Gothic'
+      font-size: 1.5em
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 1)
+      background: transparent
+
+  .platform, .main-building
+    width: 80%
+    padding: 1em
+
+  .platform
+    display: table
+
+    .param, .label
+      display: table-cell
+      vertical-align: middle
+
+    .param
+      width: 30%
+    .label
+      width: 70%
+      font-size: 5em
+      font-family: 'League Gothic' !important
+      color: rgba(255, 255, 255, 1)
+      text-transform: uppercase
+      text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1)
+
+  .main-building
+    padding: 0
+    overflow: hidden
+
+    .param:first-child
+      float: left
+
+    .desks
+      float: right
+
+      li
+        margin-top: 0
+        font-size: 0.9em
+        display: block
+
+      .param
+        float: none
+
+    .param
+      padding: 1em
 
 .actions
   margin-top: 2em
@@ -429,6 +729,166 @@ h2
     font-size: 4em
     line-height: 1em
     text-transform: uppercase
+
+.settings
+  font-size: 1.5em
+
+  nav
+    margin-top: 1em
+    font-size: 1.5em
+
+    ul
+      margin: 0 auto
+      border: 0
+      position: relative
+      overflow: hidden
+
+      li
+        float: left
+        color: #272727
+
+        &.active
+          color: $blue
+
+          a
+            color: inherit
+            background-color: lighten($ecru, 3%)
+            border-color: darken($ecru, 3%)
+
+            &:hover
+              background-color: lighten($ecru, 3%)
+              color: inherit
+
+          ul
+            display: block
+
+            li
+              color: $gray
+
+              &.active
+                color: $blue
+
+                a
+                  background-color: lighten($ecru, 3%)
+                  border-bottom-color: lighten($ecru, 3%)
+
+              a
+                border-bottom: 1px solid darken($ecru, 3%)
+                background-color: lighten($ecru, 1%)
+
+        a, ul
+          float: left
+
+        a
+          width: 2em
+          padding-top: 0.25em
+          height: 1.75em
+          line-height: 1.5em
+          text-align: center
+          text-transform: uppercase
+          color: $gray
+          background-color: lighten($ecru, 1%)
+          border: 1px solid darken($ecru, 3%)
+          border-width: 1px 1px 1px 0
+
+          &:hover
+            background-color: lighten($ecru, 3%)
+
+        ul
+          margin-top: 0.4em
+          positon: relative
+          overflow: hidden
+          font-size: 0.8em
+          font-family: 'League Gothic'
+          border: 1px solid darken($ecru, 3%)
+          border-width: 1px 1px 0 0
+          display: none
+
+          li
+            float: left
+            width: auto
+            color: $gray
+            border-left: 1px solid darken($ecru, 3%)
+
+            &:first-child
+              border-left-width: 0
+
+            a
+              display: block
+              width: auto
+              height: auto
+              padding: 0.4em 1em 0.2em
+              border-width: 0 0 1px 0
+
+
+.settings-container
+  overflow: hidden
+  background-color: lighten($ecru, 3%)
+  border: 1px solid darken($ecru, 3%)
+  border-width: 0 1px 1px 0
+
+  .tabs
+    display: table
+    width: 6*100%
+    position: relative
+    left: 0
+    @include prefixify(transition, left 0.5s ease-in-out)
+
+    .container
+      display: table-cell
+      width: 1/6*100%
+      padding: 1em 2em
+      vertical-align: middle
+      font-family: 'Lucida Grande', 'Trebuchet MS', sans-serif
+      font-size: 0.7em
+      letter-spacing: -1px
+      line-height: 1.2em
+
+  .label
+    line-height: 1.2em
+
+  .label + .ui-slider-horizontal
+    margin-top: 0.7em
+
+  .group
+    margin-bottom: 2em
+
+  .params-3
+    width: 100% !important
+
+  .params
+    .label
+      font-family: inherit
+
+  .actions
+    position: relative
+    overflow: hidden
+    border-top: 1px solid $ecru
+    font-family: 'League Gothic'
+    text-transform: uppercase
+
+    a
+      width: 50%
+      padding: 0.7em 0
+      font-size: 1.6em
+      @include prefixify(box-sizing, border-box)
+      @include prefixify(transition, all 0.5s ease-in-out)
+
+      &:hover
+        background-color: #fff
+
+      &.prev
+        float: left
+        color: $blue
+        border-right: 1px solid $ecru
+
+      &.next
+        float: right
+        color: $fine
+
+        &:hover
+          background-color: $fine
+          color: #fff
 
 // summary
 .summary

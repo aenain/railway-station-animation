@@ -48,6 +48,8 @@ class Simulation < ActiveRecord::Base
     attr_accessible *(single_value_parameters + range_parameters)
   end
 
+  validates :scheduling_algorithm, presence: true
+
   def result
     @result ||= if result_path
       File.read(result_path)
