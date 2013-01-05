@@ -24,10 +24,10 @@ class Simulation < ActiveRecord::Base
     platform_count: { default: 4, values: 1..20 },
     scheduling_algorithm: { default: nil, values: SCHEDULING_ALGORITHMS.keys },
     waiting_room_capacity: { default: 200, values: 100..2000 },
-    subway_length: { default: 40, values: 20..80 },
-    subway_width: { default: 40, values: 20..60 },
-    hall_length: { default: 40, values: 20..60 },
-    hall_width: { default: 40, values: 20..60 }
+    subway_length: { default: 40.0, values: 20..80 },
+    subway_width: { default: 40.0, values: 20..60 },
+    hall_length: { default: 40.0, values: 20..60 },
+    hall_width: { default: 40.0, values: 20..60 }
   }
 
   RANGE_PARAMETERS = {
