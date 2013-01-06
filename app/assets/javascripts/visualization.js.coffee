@@ -104,9 +104,12 @@ root.Visualization = class Visualization
     railId = $train.parent().attr('id')
     $delay = @objects["#{railId}-delay"]
     data.delay.total = data.delay.internal + data.delay.external
+    if data.delay.total > 0
+      $train.addClass('delayed')
+    else
+      $train.removeClass('delayed')
 
     @_animateTrainDelay($delay, data.delay)
-
     @_animateTrainDeparture $train, data, =>
       $train.remove()
 
