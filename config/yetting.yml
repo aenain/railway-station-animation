@@ -4,6 +4,8 @@ defaults: &defaults
     path: <%= Rails.root.join('simulation.jar') %>
     options: "-i STDIN -o STDOUT -Xmx1024M"
 
+  simulation_package_size: <%= File.stat(Rails.root.join('public', 'simulation.zip')).size %>
+
 development:
   <<: *defaults
 

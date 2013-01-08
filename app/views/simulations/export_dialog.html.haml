@@ -1,0 +1,93 @@
+- content_for :head do
+  = stylesheet_link_tag "jquery.dialog"
+  = javascript_include_tag "jquery.dialog.min"
+
+.dialog-placeholder
+
+#export-dialog.dialog{ style: 'display: none' }
+  = form_for @simulation, url: import_result_simulation_path(@simulation), html: { id: 'import_result' } do |f|
+    .dialog-content
+      %header
+        %h1 We're Sorry!
+        %p.information Due to the Heroku limitations we are not able to provide computations, so please follow below steps.
+
+      %ul.steps
+        %li
+          %h2.title Download Files
+          .content
+            %ul.files
+              %li
+                = link_to export_parameters_simulation_path(@simulation), class: 'file-link' do
+                  = image_tag '/assets/icon-file.png', class: 'icon json'
+                  .description
+                    .name Parameters
+                    .file
+                      %span.name config.json
+                      %span.size ~2 KB
+
+              %li
+                = link_to '/simulation.zip', class: 'file-link' do
+                  = image_tag '/assets/icon-package-zip.png', class: 'icon'
+                  .description
+                    .name Program
+                    .file
+                      %span.name simulation.zip
+                      %span.size= number_to_human_size(Yetting.simulation_package_size, precision: 2)
+
+                = link_to 'https://github.com/aenain/railway-station-simulation', class: 'source icon-github with-tooltip' do
+                  .tip.bottom View Source
+
+        %li
+          %h2.title Run Program
+          .content
+            %ul.hints
+              %li
+                Unzip
+                = succeed '.' do
+                  %strong simulation.zip
+                Place
+                %strong config.json
+                in the same directory as simulation.jar and run program.
+
+        %li
+          %h2.title Upload Result
+          .content
+            %p.hint
+              Upload generated file
+              = succeed ':' do
+                %strong output.json.gz
+
+    .actions
+      .file-wrapper.secondary
+        = f.file_field :result
+        .button Choose a File
+
+      = f.submit "Visualize", class: 'primary'
+
+:coffeescript
+  SITE = SITE || {}
+
+  SITE.fileInputs = ->
+    $this = $(this)
+    $wrapper = $(this).parents('.file-wrapper')
+    $val = $this.val()
+    valArray = $val.split('\\')
+    newVal = valArray[valArray.length-1]
+    $button = $this.siblings('.button')
+    if(newVal != '')
+      $button.text('File Chosen')
+      $wrapper.addClass('selected')
+    else
+      $button.text('Choose a File')
+      $wrapper.removeClass('selected')
+
+  $ ->
+    Simulation.initFields({ disabled: false })
+    $.dialog({
+      url: '#export-dialog'
+      escape: false
+      onClose: ->
+        window.location.href = window.location.href
+    })
+
+    $('.file-wrapper input[type=file]').bind('change focus click', SITE.fileInputs)

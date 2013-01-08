@@ -152,7 +152,7 @@ root.Simulation =
   getResult: (path, options) ->
     options ||= {}
     interval = setInterval ->
-      $.post path, (data, _, xhr) ->
+      $.get path, (data, _, xhr) ->
         if xhr.status == 202 # still processing
           options.process(data) if typeof options.process == "function"
         else

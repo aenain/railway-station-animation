@@ -1,7 +1,10 @@
 RailwayStation::Application.routes.draw do
   resources :simulations, only: [:new, :create, :show] do
     member do
-      post :result
+      get :result
+      get :export_dialog
+      get :export_parameters
+      put :import_result
     end
   end
 

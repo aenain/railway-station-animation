@@ -70,6 +70,25 @@ class Simulation < ActiveRecord::Base
     end
   end
 
+  def save_result_from_io(io)
+    path = build_result_path
+
+    case io.content_type
+      when 'application/json'
+        Zlib::GzipWriter.open(path) do |gz|
+          gz.write(io.read)
+        end
+      when 'application/x-gzip', 'application/octet-stream'
+        File.open(path, 'w') do |f|
+          f.write(io.read.force_encoding('utf-8'))
+        end
+      else
+        return false
+    end
+
+    update_column(:result_filename, path.basename.to_s)
+  end
+
   def decompress_result
     if result_path
       Zlib::GzipReader.open(result_path) do |gz|

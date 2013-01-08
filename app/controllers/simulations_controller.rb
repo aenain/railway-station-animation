@@ -14,9 +14,30 @@ class SimulationsController < ApplicationController
     end
   end
 
+  def export_dialog
+    @simulation = Simulation.find(params[:id])
+    @package_size = Yetting.simulation_package_size
+  end
+
+  def export_parameters
+    @simulation = Simulation.find(params[:id])
+    send_data JSON.pretty_generate(@simulation.as_json), type: 'application/json; charset=utf-8',
+                                                         disposition: 'attachment; filename=config.json'
+  end
+
+  def import_result
+    @simulation = Simulation.find(params[:id])
+    if @simulation.save_result_from_io(params[:simulation][:result])
+      redirect_to @simulation
+    else
+      render :export_dialog
+    end
+  end
+
   def show
     @simulation = Simulation.find(params[:id])
     @acceleration = 100
+    redirect_to export_dialog_simulation_path(@simulation) unless @simulation.computed?
   end
 
   def result

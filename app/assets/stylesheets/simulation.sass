@@ -721,7 +721,7 @@ h2
   margin-top: 2em
   text-align: center
 
-  .primary
+  .primary, .secondary
     -webkit-appearance: none
     margin: 0 auto
     padding: 0.3em 2em
@@ -860,6 +860,7 @@ h2
     .label
       font-family: inherit
 
+.settings-container, .dialog, #dialog
   .actions
     position: relative
     overflow: hidden
@@ -867,28 +868,42 @@ h2
     font-family: 'League Gothic'
     text-transform: uppercase
 
-    a
+    input[type=submit]
+      -webkit-appearance: none
+      background-color: transparent
+      border: 0
+
+    a, input[type=submit], .file-wrapper
       width: 50%
       padding: 0.7em 0
       font-size: 1.6em
+      text-shadow: none
+      border-radius: 0
+      letter-spacing: -1px
       @include prefixify(box-sizing, border-box)
       @include prefixify(transition, all 0.5s ease-in-out)
 
       &:hover
         background-color: #fff
 
-      &.prev
+      &.prev, &.secondary
         float: left
         color: $blue
         border-right: 1px solid $ecru
 
       &.next
         float: right
+
+      &.next, &.primary
         color: $fine
 
         &:hover
           background-color: $fine
           color: #fff
+
+    &.single-action
+      a, input[type=submit]
+        width: 100%
 
 // summary
 .summary
@@ -921,3 +936,171 @@ h2
         font-family: 'League Gothic'
         letter-spacing: 0
         font-size: 1.2em
+
+#dialog
+  width: 60%
+  margin: 5% auto
+  font-family: 'Lucida Grande', 'Trebuchet MS', sans-serif
+  letter-spacing: -1px
+  font-size: 1em
+  line-height: 1.2em
+  background-color: lighten($ecru, 3%)
+  color: $gray
+
+  h1, h2, .title
+    font-family: 'League Gothic'
+    font-size: 1.5em
+    letter-spacing: 0
+    line-height: 1.2em
+    color: rgba(0, 0, 0, 0.8)
+
+  header
+    margin-bottom: 2em
+
+    h1
+      font-size: 2em
+
+  .dialog-content
+    padding: 2em 2em 1em
+
+  .steps
+    margin: 1em 0
+
+    li
+      margin-top: 1.5em
+
+    .title
+      text-align: left
+
+    .icon
+      width: 5em
+      height: 5em
+      float: left
+      margin-right: 1em
+
+      &.json
+        margin-top: 0.5em
+
+      & + .description
+        margin-top: 1em
+
+  .hints li
+    margin: 0.2em 0
+
+  .files
+    display: table
+    width: 100%
+
+    li
+      display: table-cell
+      position: relative
+      width: 50%
+
+    .description
+      float: left
+      .name
+        font-size: 1.5em
+        line-height: 1.2em
+
+    .file-link
+      margin: 0.5em
+      padding: 0.5em
+      display: block
+      position: relative
+      overflow: hidden
+      color: $blue
+      border-radius: 0.2em
+      @include prefixify(transition, background-color 0.3s linear)
+
+      &:hover
+        background-color: #fff
+
+    .source
+      display: none
+      right: 1em
+      top: 2em
+      width: 1em
+      height: 1em
+      line-height: 1em
+      padding: 0.2em
+      border-radius: 50%
+      display: block
+      position: absolute
+      font-size: 1.5em
+      color: rgba(0, 0, 0, 0.4)
+
+      &:hover
+        color: $gray
+
+      .tip
+        width: 6em
+        font-size: 0.6em
+        left: -2.1em
+        top: 2.2em
+
+    .file
+      color: lighten($gray, 20%)
+
+      .name
+        font-size: 1em
+        padding-right: 0.5em
+
+      .size
+        color: lighten($gray, 30%)
+        font-size: 0.8em
+
+  .actions
+    margin-top: 0
+    font-size: 2em
+    width: 100%
+    overflow: hidden
+
+    .file-wrapper
+      width: 100%
+
+      & + input[type=submit]
+        display: none
+
+      &.selected
+        width: 50%
+
+        & + input[type=submit]
+          display: block
+          width: 50%
+
+// file-wrapper
+.file-wrapper
+  cursor: pointer
+  overflow: hidden
+  position: relative
+  width: 100%
+  height: 100%
+  border: 0
+  background: transparent // $blue
+
+  input
+    cursor: pointer
+    font-size: 10em
+    height: 100%
+    filter: alpha(opacity=1)
+    opacity: 0.01
+    position: absolute
+    right: 0
+    top: 0
+    border: 0
+
+  .button
+    display: block
+    border: 0
+    color: $blue // #fff
+    cursor: pointer
+    display: inline-block
+    @include prefixify(transition, color 0.5s ease-in-out)
+
+  &:hover
+    .button
+      color: $blue
+
+.dialog-placeholder
+  width: 100%
+  height: 50em

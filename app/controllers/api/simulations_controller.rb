@@ -28,29 +28,19 @@ class Api::SimulationsController < Api::BaseController
   end
 
   def upload_json
-    upload_result do |path|
-      Zlib::GzipWriter.open(path) do |gz|
-        gz.write(params[:result].read)
-      end
-    end
+    upload_result
   end
 
   def upload_gzip
-    upload_result do |path|
-      File.open(path, 'w') do |f|
-        f.write(params[:result].read.force_encoding('utf-8'))
-      end
-    end
+    upload_result
   end
 
   private
 
-  def upload_result(&block)
+  def upload_result
     rescue_from_not_found do
       @simulation = Simulation.find(params[:id])
-      path = @simulation.build_result_path
-      block.call(path)
-      @simulation.update_column(:result_filename, path.basename.to_s)
+      @simulation.save_result_from_io(params[:result])
       render json: { data: { simulation: { id: @simulation.id } } }
     end
   end
