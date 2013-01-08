@@ -66,38 +66,12 @@ footer
 
 #header
   width: 100%
-  height: 250px
   background: $blue url('/assets/top-background.png') repeat-x
   text-align: center
   border-bottom: 10px solid $gray
 
-  h1
-    height: 6.27em
-    display: inline-block
-    font-family: 'Bauhaus 93'
-    color: $ecru
-    font-size: 1.5em
-    border: 1px solid $ecru
-    border-width: 10px 0
-    margin-top: 1.7em
-    padding: 0
-
-    span
-      display: block
-      text-transform: uppercase
-      font-size: 3em
-      line-height: 1em
-      letter-spacing: -0.02em
-      margin: 0 auto
-      padding: 0
-      text-align: center
-
-      &:last-child
-        position: relative
-        top: -0.17em
-        font-size: 4.3em
-        letter-spacing: 0
-        text-indent: 0.03em
+  .logo
+    margin: 2em auto 1.7em
 
 #no-result
   width: 60%
@@ -339,6 +313,7 @@ h2
   &, ul, li
     margin: 0
     padding: 0
+
     list-style: none
 
   li
@@ -759,6 +734,9 @@ h2
               background-color: lighten($ecru, 3%)
               color: inherit
 
+            &.train-link
+              background-image: url('/assets/icon-train-active.png')
+
           ul
             display: block
 
@@ -771,6 +749,7 @@ h2
                 a
                   background-color: lighten($ecru, 3%)
                   border-bottom-color: lighten($ecru, 3%)
+
 
               a
                 border-bottom: 1px solid darken($ecru, 3%)
@@ -793,6 +772,12 @@ h2
 
           &:hover
             background-color: lighten($ecru, 3%)
+
+          &.train-link
+            background-image: url('/assets/icon-train-normal.png')
+            background-position: center center
+            background-repeat: no-repeat
+            background-size: 50% 50%
 
         ul
           margin-top: 0.4em

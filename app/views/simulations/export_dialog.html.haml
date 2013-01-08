@@ -18,7 +18,7 @@
             %ul.files
               %li
                 = link_to export_parameters_simulation_path(@simulation), class: 'file-link' do
-                  = image_tag '/assets/icon-file.png', class: 'icon json'
+                  = image_tag '/assets/icon-file-json.png', class: 'icon json', alt: 'File JSON'
                   .description
                     .name Parameters
                     .file
@@ -27,7 +27,7 @@
 
               %li
                 = link_to '/simulation.zip', class: 'file-link' do
-                  = image_tag '/assets/icon-package-zip.png', class: 'icon'
+                  = image_tag '/assets/icon-package-zip.png', class: 'icon', alt: 'File ZIP'
                   .description
                     .name Program
                     .file

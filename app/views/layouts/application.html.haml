@@ -16,9 +16,7 @@
       .flash.error= flash[:error]
 
     %header#header
-      %h1
-        %span Railway Station
-        %span Simulation
+      = image_tag '/assets/railway-station-logo.png', class: 'logo', alt: 'Railway Station Simulation Logo'
 
     = yield
 
