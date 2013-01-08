@@ -163,9 +163,9 @@ root.Simulation =
 
   initSummary: (data) ->
     @_initSummaryPeople(data)
-    @_initSummaryCashDesks(data)
-    @_initSummaryInformation(data)
-    @_initSummaryTrains(data)
+    @_initSummaryCashDesks(data.cashDesks)
+    @_initSummaryInformation(data.infoDesks)
+    @_initSummaryTrains(data.trains)
 
   # allowed precisions: "minutes", "seconds"
   prettyTime: (seconds, precision) ->
@@ -182,7 +182,7 @@ root.Simulation =
         seconds -= minutes * 60
         formatted += minutes + " min "
       if seconds > 0
-        formatted += seconds + " sec"
+        formatted += Math.round(seconds) + " sec"
     formatted
 
   getAcceleration: ->
@@ -351,13 +351,15 @@ root.Simulation =
     Math.round(number * factor) / factor
 
   _initSummaryPeople: (data) ->
-    totalPeople = data.passengers.arriving + data.passengers.departuring + data.companions + data.visitors
+    totalPeople = data.passengers.arriving.total + data.passengers.departuring.total + data.companions + data.visitors
 
     $("#summary").append @_buildSummarySection({
       title: 'People'
       data: [
-        { description: 'Arriving passengers', value: data.passengers.arriving },
-        { description: 'Departuring passengers', value: data.passengers.departuring },
+        { description: 'Arriving passengers', value: data.passengers.arriving.total },
+        { description: 'Departuring passengers', value: data.passengers.departuring.total },
+        { description: 'Passengers who miss their trains', value: data.passengers.departuring.missedTrain },
+        { description: 'Passengers who ride without a ticket', value: data.passengers.departuring.withoutTicket },
         { description: 'Companions', value: data.companions },
         { description: 'Visitors', value: data.visitors },
         { description: 'Total', value: totalPeople }
@@ -365,35 +367,52 @@ root.Simulation =
     })
 
   _initSummaryCashDesks: (data) ->
+    formattedData = [
+      { description: 'Sold tickets', value: data.soldTickets }
+    ].concat(@_formatDeskQueueData(data.queues))
+
     $("#summary").append @_buildSummarySection({
       title: 'Cash Desks'
-      data: [
-        { description: 'Sold tickets', value: data.cashDesks.soldTickets },
-        { description: 'Average waiting time', value: @prettyTime(data.cashDesks.averageWaitingTime, "seconds") }
-      ]
+      data: formattedData
     })
 
   _initSummaryInformation: (data) ->
+    formattedData = [
+      { description: 'Served informations', value: data.servedInformations },
+      { description: 'Complaints', value: data.complaints }
+    ].concat(@_formatDeskQueueData(data.queues))
+
     $("#summary").append @_buildSummarySection({
       title: 'Information'
-      data: [
-        { description: 'Served informations', value: data.infoDesks.servedInformations },
-        { description: 'Complaints', value: data.infoDesks.complaints },
-        { description: 'Average waiting time', value: @prettyTime(data.infoDesks.averageWaitingTime, "seconds") }
-      ]
+      data: formattedData
     })
 
   _initSummaryTrains: (data) ->
+    delayPrecision = "seconds"
+
     $("#summary").append @_buildSummarySection({
       title: 'Trains'
       data: [
-        { description: 'Average external delay', value: @prettyTime(data.trains.delay.average.external, "minutes") },
-        { description: 'Average semaphore delay', value: @prettyTime(data.trains.delay.average.semaphore, "minutes") },
-        { description: 'Average platform delay', value: @prettyTime(data.trains.delay.average.platform, "minutes") },
-        { description: 'Platform changes', value: data.trains.platformChanges },
-        { description: 'Total', value: data.trains.count }
+        { description: 'Average external delay', value: @prettyTime(data.delay.average.external, delayPrecision) },
+        { description: 'Maximum external delay', value: @prettyTime(data.delay.max.external, delayPrecision) },
+        { description: 'Average semaphore delay', value: @prettyTime(data.delay.average.semaphore, delayPrecision) },
+        { description: 'Maximum semaphore delay', value: @prettyTime(data.delay.max.semaphore, delayPrecision) },
+        { description: 'Average platform delay', value: @prettyTime(data.delay.average.platform, delayPrecision) },
+        { description: 'Maximum platform delay', value: @prettyTime(data.delay.max.platform, delayPrecision) },
+        { description: 'Average total delay', value: @prettyTime(data.delay.average.total, delayPrecision) },
+        { description: 'Maximum total delay', value: @prettyTime(data.delay.max.total, delayPrecision) },
+        { description: 'Platform changes', value: data.platformChanges },
+        { description: 'Total', value: data.count }
       ]
     })
+
+  _formatDeskQueueData: (queue) ->
+    [
+      { description: 'Average waiting time', value: @prettyTime(queue.waitingTime.average, "seconds") },
+      { description: 'Maximum waiting time', value: "#{@prettyTime(queue.waitingTime.max, "seconds")} at #{queue.waitingTime.maxAt}" },
+      { description: 'Average queue length', value: Math.round(queue.length.average) },
+      { description: 'Maximum queue length', value: "#{queue.length.max} at #{queue.length.maxAt}" }
+    ]
 
   _buildSummarySection: (options) ->
     @summarySection ||= _.template """
@@ -401,7 +420,10 @@ root.Simulation =
         <h3><%= title %></h3>
         <table>
           <% _.each(data, function(row) { %>
-            <tr><td><%= row.description %></td><td><%= row.value %></td></tr>
+            <tr>
+              <td><%= row.description %></td>
+              <td><%= row.value %></td>
+            </tr>
           <% }) %>
         </table>
       </div>
