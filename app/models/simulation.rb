@@ -78,7 +78,7 @@ class Simulation < ActiveRecord::Base
         Zlib::GzipWriter.open(path) do |gz|
           gz.write(io.read)
         end
-      when 'application/x-gzip', 'application/octet-stream'
+      when 'application/gzip', 'application/x-gzip', 'application/octet-stream'
         File.open(path, 'w') do |f|
           f.write(io.read.force_encoding('utf-8'))
         end
