@@ -75,6 +75,8 @@ root.Simulation =
       false
   state: 'pause'
 
+  summaryInitiated: false
+
   initFields: (options) ->
     options ||= {}
     Simulation._initKnob(options)
@@ -162,10 +164,12 @@ root.Simulation =
     , 1000
 
   initSummary: (data) ->
-    @_initSummaryPeople(data)
-    @_initSummaryCashDesks(data.cashDesks)
-    @_initSummaryInformation(data.infoDesks)
-    @_initSummaryTrains(data.trains)
+    unless @summaryInitiated
+      @summaryInitiated = true
+      @_initSummaryPeople(data)
+      @_initSummaryCashDesks(data.cashDesks)
+      @_initSummaryInformation(data.infoDesks)
+      @_initSummaryTrains(data.trains)
 
   # allowed precisions: "minutes", "seconds"
   prettyTime: (seconds, precision) ->
@@ -409,7 +413,7 @@ root.Simulation =
   _formatDeskQueueData: (queue) ->
     [
       { description: 'Average waiting time', value: @prettyTime(queue.waitingTime.average, "seconds") },
-      { description: 'Maximum waiting time', value: "#{@prettyTime(queue.waitingTime.max, "seconds")} at #{queue.waitingTime.maxAt}" },
+      { description: 'Maximum waiting time', value: "#{@prettyTime(queue.waitingTime.max, "minutes")} at #{queue.waitingTime.maxAt}" },
       { description: 'Average queue length', value: Math.round(queue.length.average) },
       { description: 'Maximum queue length', value: "#{queue.length.max} at #{queue.length.maxAt}" }
     ]
