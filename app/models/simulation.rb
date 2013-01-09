@@ -3,8 +3,7 @@ class Simulation < ActiveRecord::Base
 
   SCHEDULING_ALGORITHMS = {
     "wait" => "Wait until scheduled platform is free",
-    "random" => "Randomly choose free platform",
-    "attrs" => "ATTRS"
+    "random" => "Randomly choose free platform"
   }
 
   SIZING_SCALE = 5
