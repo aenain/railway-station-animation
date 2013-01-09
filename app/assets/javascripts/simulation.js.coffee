@@ -82,7 +82,6 @@ root.Simulation =
     Simulation._initKnob(options)
     Simulation._initLabelRangeWithFields({ disabled: !!options.disabled, prefix: "simulation_" })
     Simulation._initClockRangeWithFields({ disabled: !!options.disabled, prefix: "simulation_" })
-    Simulation._initResizableFields({ disabled: !!options.disabled, prefix: "simulation_" })
 
   initVisitorComingChart: (options, isDisabled) ->
     @visitorComingChart = Simulation._initChart(options, isDisabled)
@@ -90,18 +89,11 @@ root.Simulation =
   initCompanionCountChart: (options, isDisabled) ->
     @companionCountChart = Simulation._initChart(options, isDisabled)
 
-  initWalkingSpeedChart: (options, isDisabled) ->
-    @walkingSpeedChart = Simulation._initChart(options, isDisabled)
-    Simulation._refreshMaxWalkingSpeed()
-
   getVisitorComingDistribution: ->
     @_getChartYSeries(@visitorComingChart, 0)
 
   getCompanionCountDistribution: ->
     @_getChartYSeries(@companionCountChart, 0)
-
-  getWalkingSpeedDistribution: ->
-    @_getChartYSeries(@walkingSpeedChart, 0)
 
   initSettingsNavigation: ->
     @settingsPageIndex = 0
@@ -244,34 +236,6 @@ root.Simulation =
     if isDisabled
       options = $.extend(true, {}, Simulation.disabledChart, options)
     new Highcharts.Chart($.extend(true, {}, Simulation.chart, options))
-
-  _initResizableFields: (options) ->
-    $('.resizable').each (_, resizable) ->
-      $length = $('#' + this.id + '_length')
-      $width = $('#' + this.id + '_width')
-      $time = $('#' + this.id + '_walking_time')
-
-      updateTime = (length) ->
-        if Simulation.maxWalkingSpeed?
-          # 3.6 is there because maxWalkingSpeed is in km/h and we need it in m/s
-          $time.text(Number(length / Simulation.maxWalkingSpeed * 3.6).toFixed(1) + ' s')
-
-      $(this).resizable({
-        disabled: options.disabled
-        minHeight: parseInt($length.attr('data-min')) * Simulation.SIZING_SCALE
-        minWidth: parseInt($width.attr('data-min')) * Simulation.SIZING_SCALE
-        maxHeight: parseInt($length.attr('data-max')) * Simulation.SIZING_SCALE
-        maxWidth: parseInt($width.attr('data-max')) * Simulation.SIZING_SCALE
-        aspectRatio: !!$(this).attr('data-preserve-ratio')
-        handles: 's, e, se'
-        resize: (event, ui) ->
-          $length.val(Number(ui.size.height / Simulation.SIZING_SCALE).toFixed(1))
-          $width.val(Number(ui.size.width / Simulation.SIZING_SCALE).toFixed(1))
-          updateTime(ui.size.height / Simulation.SIZING_SCALE)
-      }).bind('hover', ->
-        Simulation._refreshMaxWalkingSpeed()
-        updateTime(parseInt($length.val()))
-      ).css({ width: parseInt($length.val()) * Simulation.SIZING_SCALE, height: parseInt($width.val()) * Simulation.SIZING_SCALE })
 
   _initLabelRangeWithFields: (options) ->
     $("form .slider:not(.time-range)").each (_, slider) ->

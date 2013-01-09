@@ -22,11 +22,7 @@ class Simulation < ActiveRecord::Base
     internal_arrival_time: { default: 5, values: 1..60 },
     platform_count: { default: 4, values: 1..20 },
     scheduling_algorithm: { default: nil, values: SCHEDULING_ALGORITHMS.keys },
-    waiting_room_capacity: { default: 200, values: 100..2000 },
-    subway_length: { default: 40.0, values: 20..80 },
-    subway_width: { default: 40.0, values: 20..60 },
-    hall_length: { default: 40.0, values: 20..60 },
-    hall_width: { default: 40.0, values: 20..60 }
+    waiting_room_capacity: { default: 200, values: 100..2000 }
   }
 
   RANGE_PARAMETERS = {
@@ -42,11 +38,9 @@ class Simulation < ActiveRecord::Base
 
   DISTRIBUTION_PARAMETERS = {
     visitor_coming_distribution: { default: [20, 30, 40, 50, 60, 70, 80, 90, 100, 90, 80, 70], type: :integer },
-    companion_count_distribution: { default: [30, 30, 20, 10, 5, 5, 0], type: :float },
-    crowd_speed_distribution: { default: [0, 8, 7, 6, 4, 2, 1, 0], type: :float }
+    companion_count_distribution: { default: [30, 30, 20, 10, 5, 5, 0], type: :float }
   }
 
-  serialize :crowd_speed_distribution, Array
   serialize :companion_count_distribution, Array
   serialize :visitor_coming_distribution, Array
 

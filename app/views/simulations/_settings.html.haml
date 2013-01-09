@@ -5,7 +5,6 @@
       %ul
         %li.active.page= link_to 'Arrival Time', '#'
         %li.page= link_to 'Amount', '#'
-        %li.page= link_to 'Walking', '#'
         %li.page= link_to 'Activities', '#'
     %li.section
       = link_to '', '#', title: 'Trains', class: 'train-link'
@@ -115,13 +114,6 @@
               = attribute_field(f, :go_to_platform_max_time_span, class: 'knob')
               .after minutes to the train.
 
-        %li
-          %header How fast can people walk?
-          = f.hidden_field :crowd_speed_distribution
-          #walking-speed{ style: 'height: 300px' }
-
-    %li.container
-      %ul.params
         %li.group
           %header Cash Desks
           %ul.params-2.wide
@@ -224,21 +216,8 @@
           .label
             Platforms
 
-        %li#simulation_subway.tunnel.resizable.with-tooltip{ class: read_only && 'resizable-disabled' }
+        %li#simulation_subway.tunnel
           %header Subway
-          %span.height.size
-            - range = Simulation::PARAMETERS[:subway_length][:values]
-            = f.text_field :subway_length, disabled: true, data: { min: range.first, max: range.last }
-            m
-          %span.width.size
-            - range = Simulation::PARAMETERS[:subway_width][:values]
-            = f.text_field :subway_width, disabled: true, data: { min: range.first, max: range.last }
-            m
-          .tip.right
-            Minimal Walking Time:
-            %br
-            #simulation_subway_walking_time.walking-time 0
-
 
         %li.main-building
           %ul.params
@@ -257,21 +236,8 @@
                   .after
                     Information Desks
 
-            %li#simulation_hall.hall.resizable.with-tooltip{ class: read_only && 'resizable-disabled', data: { 'preserve-ratio' => 1 }}
+            %li#simulation_hall.hall
               %header Hall
-              %span.height.size
-                - range = Simulation::PARAMETERS[:hall_length][:values]
-                = f.text_field :hall_length, disabled: true, data: { min: range.first, max: range.last }
-                m
-              %span.width.size
-                - range = Simulation::PARAMETERS[:hall_width][:values]
-                = f.text_field :hall_width, disabled: true, data: { min: range.first, max: range.last }
-                m
-              .tip.right
-                Minimal Walking Time:
-                %br
-                #simulation_hall_walking_time.walking-time 0
-
 
   .actions
     = link_to 'Go Back', '#', class: 'prev'
@@ -352,33 +318,6 @@
       }]
     }, disabled)
 
-    Simulation.initWalkingSpeedChart({
-      chart:
-        renderTo: 'walking-speed'
-        marginBottom: 40
-      title:
-        text: " "
-      yAxis:
-        min: 0
-        max: 15
-        title:
-          text: "Walking Speed [km/h]"
-      xAxis:
-        allowDecimals: false
-        min: 1
-        title:
-          text: "People On Square Meter"
-      series: [{
-        data: #{nested_options_for_javascript(f.object.crowd_speed_distribution)}
-        name: 'Speed'
-        draggableY: !disabled
-        type: 'line'
-      }]
-      tooltip:
-        formatter: ->
-          '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + Number(this.point.y).toFixed(1) + ' km/h</b>'
-    }, disabled)
-
     $("#settings nav .tooltip").tooltipster(
       position: 'bottom'
       offsetY: 2
@@ -390,11 +329,7 @@
       Simulation.bind 'submit', ($form) ->
         # dump data from charts
         $("#simulation_visitor_coming_distribution").val(Simulation.getVisitorComingDistribution())
-        $("#simulation_crowd_speed_distribution").val(Simulation.getWalkingSpeedDistribution())
         $("#simulation_companion_count_distribution").val(Simulation.getCompanionCountDistribution())
-
-        # enable fields, because disabled ones are not serialized
-        $("#simulation_subway_length, #simulation_subway_width, #simulation_hall_length, #simulation_hall_width").prop('disabled', false)
 
         $form.submit()
 
