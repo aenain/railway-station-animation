@@ -163,23 +163,47 @@ root.Simulation =
       @_initSummaryInformation(data.infoDesks)
       @_initSummaryTrains(data.trains)
 
-  # allowed precisions: "minutes", "seconds"
+  # allowed precisions: "hours", "minutes", "seconds"
   prettyTime: (seconds, precision) ->
-    formatted = ""
-    if seconds > 3600
-      hours = Math.floor(seconds / 3600)
-      seconds -= hours * 3600
-      formatted += hours + " hours "
-    if precision == "minutes"
-      formatted += Math.round(seconds / 60) + " min "
-    else
-      if seconds > 60
-        minutes = Math.floor(seconds / 60)
-        seconds -= minutes * 60
-        formatted += minutes + " min "
-      if seconds > 0
-        formatted += Math.round(seconds) + " sec"
-    formatted
+    hours = seconds / 3600
+    seconds -= Math.floor(hours) * 3600
+    minutes = seconds / 60
+    seconds -= Math.floor(minutes) * 60
+
+    switch precision
+      when "hours"
+        hours = Math.round(hours)
+        if hours == 1
+          "1 hour"
+        else
+          "#{hours} hours"
+
+      when "minutes"
+        hours = Math.floor(hours)
+        minutes = Math.round(minutes)
+        if hours == 0
+          "#{minutes}min"
+        else
+          "#{hours}h  #{minutes}min"
+
+      when "seconds"
+        hours = Math.floor(hours)
+        minutes = Math.floor(minutes)
+        seconds = Math.round(seconds)
+
+        if hours == 0 && minutes == 0
+          if seconds == 1
+            "1 second"
+          else
+            "#{seconds} seconds"
+        else
+          formatted = ""
+          formatted += "#{hours}h" if hours > 0
+          formatted += " #{minutes}min" if minutes > 0
+          formatted += " #{seconds}s" if seconds > 0
+          formatted
+      else
+        ""
 
   getAcceleration: ->
     parseInt($("#acceleration").val())
