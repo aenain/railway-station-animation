@@ -84,7 +84,7 @@ root.Visualization = class Visualization
     minutes = "0#{minutes}" if minutes < 10
     seconds = "0#{seconds}" if seconds < 10
 
-    clock.innerText = "#{hours}:#{minutes}:#{seconds}" for clock in @clockObjects
+    clock.innerHTML = "#{hours}:#{minutes}:#{seconds}" for clock in @clockObjects
 
   _onTrainArrival: (data) ->
     delayed = Math.round((data.delay.external + data.delay.semaphore) / 60.0) > 0
@@ -135,7 +135,7 @@ root.Visualization = class Visualization
   _updatePeopleCount: (elementName, count) ->
     if count?
       element = @countObjects[elementName]
-      element.innerText = count if element?
+      element.innerHTML = count if element?
 
   _buildTrain: (data) ->
     @trainTemplate ||= _.template """
