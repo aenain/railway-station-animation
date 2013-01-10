@@ -31,7 +31,7 @@ class Simulation < ActiveRecord::Base
     coming_time_span_without_ticket: { default: [15, 50], values: 0..60 }, # minutes
     companion_coming_time_span: { default: [10, 20], values: 0..60 }, # minutes
     departuring_passenger_count: { default: [10, 60], values: 0..150 },
-    external_delay: { default: [5, 60], values: 0..60 }, # minutes
+    external_delay: { default: [5, 30], values: 0..60 }, # minutes
     selling_ticket_time: { default: [1, 3], values: 0..60 }, # minutes
     serving_information_time: { default: [1, 3], values: 0..60 } # minutes
   }
