@@ -13,27 +13,27 @@ class Simulation < ActiveRecord::Base
     average_probability_of_getting_information: { default: 30, values: 0..100 }, # percentages
     average_probability_of_external_delay: { default: 50, values: 0..100 }, # percentages
     average_probability_of_buying_ticket: { default: 50, values: 0..100 }, # percentages
-    cash_desk_count: { default: 3, values: 1..20 },
+    cash_desk_count: { default: 5, values: 1..20 },
     default_platform_waiting_time: { default: 10, values: 1..60 }, # minutes
     external_delay_info_time_span: { default: 30, values: 1..60 }, # minutes
     go_to_waiting_room_min_time_span: { default: 12, values: 1..60 }, # minutes
     go_to_platform_max_time_span: { default: 5, values: 1..60 }, # minutes
     info_desk_count: { default: 7, values: 1..20 },
     internal_arrival_time: { default: 5, values: 1..60 },
-    platform_count: { default: 7, values: 1..20 },
+    platform_count: { default: 5, values: 1..20 },
     scheduling_algorithm: { default: nil, values: SCHEDULING_ALGORITHMS.keys },
     waiting_room_capacity: { default: 200, values: 100..2000 }
   }
 
   RANGE_PARAMETERS = {
-    arriving_passenger_count: { default: [10, 70], values: 0..150 },
+    arriving_passenger_count: { default: [10, 60], values: 0..150 },
     coming_time_span_with_ticket: { default: [15, 45], values: 0..60 }, # minutes
     coming_time_span_without_ticket: { default: [15, 50], values: 0..60 }, # minutes
     companion_coming_time_span: { default: [10, 20], values: 0..60 }, # minutes
-    departuring_passenger_count: { default: [10, 70], values: 0..150 },
+    departuring_passenger_count: { default: [10, 60], values: 0..150 },
     external_delay: { default: [5, 60], values: 0..60 }, # minutes
-    selling_ticket_time: { default: [2, 5], values: 0..60 }, # minutes
-    serving_information_time: { default: [2, 5], values: 0..60 } # minutes
+    selling_ticket_time: { default: [1, 3], values: 0..60 }, # minutes
+    serving_information_time: { default: [1, 3], values: 0..60 } # minutes
   }
 
   DISTRIBUTION_PARAMETERS = {
