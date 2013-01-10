@@ -80,6 +80,7 @@ root.Visualization = class Visualization
     time -= minutes * 60
     seconds = Math.floor(time)
 
+    hours = hours % 24
     hours = "0#{hours}" if hours < 10
     minutes = "0#{minutes}" if minutes < 10
     seconds = "0#{seconds}" if seconds < 10
