@@ -57,6 +57,8 @@
       else
         $element.attr('title', label)
 
+    $("#controls, #toolbar, #communication").hide()
+
     $("#refresh-link").click (event) ->
       event.preventDefault()
       window.location.reload()
