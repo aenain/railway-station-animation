@@ -27,7 +27,7 @@ class SimulationsController < ApplicationController
 
   def import_result
     @simulation = Simulation.find(params[:id])
-    if @simulation.save_result_from_io(params[:simulation][:result])
+    if @simulation.update_attributes(params[:simulation])
       redirect_to @simulation
     else
       render :export_dialog
@@ -42,11 +42,12 @@ class SimulationsController < ApplicationController
 
   def result
     @simulation = Simulation.find(params[:id])
+
     if @simulation.computed?
       response.headers['Content-Type'] = 'application/json; charset=utf-8'
       if request.headers['Accept-Encoding'] =~ /gzip/
         response.headers['Content-Encoding'] = 'gzip'
-        render text: @simulation.result
+        render text: @simulation.compress_result
       else
         render text: @simulation.decompress_result
       end

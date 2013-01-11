@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130109195459) do
+ActiveRecord::Schema.define(:version => 20130111114901) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -61,10 +61,10 @@ ActiveRecord::Schema.define(:version => 20130109195459) do
     t.integer  "average_probability_of_external_delay"
     t.integer  "min_companion_coming_time_span"
     t.integer  "max_companion_coming_time_span"
-    t.string   "result_filename"
     t.binary   "companion_count_distribution"
     t.binary   "visitor_coming_distribution"
     t.integer  "average_probability_of_getting_information"
+    t.string   "output"
   end
 
 end

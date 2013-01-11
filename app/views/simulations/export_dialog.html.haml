@@ -5,7 +5,7 @@
 .dialog-placeholder
 
 #export-dialog.dialog{ style: 'display: none' }
-  = form_for @simulation, url: import_result_simulation_path(@simulation), html: { id: 'import_result' } do |f|
+  = form_for @simulation, url: import_result_simulation_path(@simulation), html: { id: 'import_result', multipart: true } do |f|
     .dialog-content
       %header
         %h1 We're Sorry!
@@ -59,7 +59,7 @@
 
     .actions
       .file-wrapper.secondary
-        = f.file_field :result
+        = f.file_field :output
         .button Choose a File
 
       = f.submit "Visualize", class: 'primary'

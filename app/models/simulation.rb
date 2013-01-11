@@ -1,6 +1,6 @@
-class Simulation < ActiveRecord::Base
-  RESULT_DIRECTORY = Rails.root.join("public", "simulation", "result")
+require 'carrierwave/orm/activerecord'
 
+class Simulation < ActiveRecord::Base
   SCHEDULING_ALGORITHMS = {
     "wait" => "Wait until scheduled platform is free",
     "random" => "Randomly choose free platform"
@@ -43,6 +43,7 @@ class Simulation < ActiveRecord::Base
 
   serialize :companion_count_distribution, Array
   serialize :visitor_coming_distribution, Array
+  mount_uploader :output, GzipUploader
 
   before_validation :convert_distributions
 
@@ -53,62 +54,53 @@ class Simulation < ActiveRecord::Base
     end.flatten
 
     attr_accessible *(SINGLE_VALUE_PARAMETERS.keys + DISTRIBUTION_PARAMETERS.keys + range_parameter_names)
+    attr_accessible :output
   end
 
   validates :scheduling_algorithm, presence: true
 
-  def result
-    @result ||= if result_path
-      File.read(result_path)
-    end
-  end
-
-  def save_result_from_io(io)
-    path = build_result_path
-
-    case io.content_type
-      when 'application/json'
-        Zlib::GzipWriter.open(path) do |gz|
-          gz.write(io.read)
-        end
-      when 'application/gzip', 'application/x-gzip', 'application/octet-stream'
-        File.open(path, 'w') do |f|
-          f.write(io.read.force_encoding('utf-8'))
-        end
-      else
-        return false
-    end
-
-    update_column(:result_filename, path.basename.to_s)
-  end
-
-  def decompress_result
-    if result_path
-      Zlib::GzipReader.open(result_path) do |gz|
-        gz.read
-      end
-    end
-  end
-
   def parse_result
-    decompressed = decompress_result
     begin
-      JSON.parse(decompressed)
+      JSON.parse(decompress_result)
     rescue JSON::ParserError
       nil
     end
   end
 
-  def result_path
-    RESULT_DIRECTORY.join(result_filename) if result_filename
+  def decompress_result
+    return nil unless computed?
+    unless @decompressed_result
+      Zlib::GzipReader.open(output.file.path) do |gz|
+        @decompressed_result = gz.read
+      end
+    end
+    @decompressed_result
   end
 
-  def build_result_path
-    RESULT_DIRECTORY.join("#{id}.gz")
+  def compress_result
+    return nil unless computed?
+    @compressed_result ||= output.file.read
+  end
+
+  def save_result_from_io(io)
+    case io.content_type
+      when 'application/json'
+        compressed_io = StringIO.new
+        Zlib::GzipWriter.open(compressed_io) do |gz|
+          gz.write(io.read)
+        end
+        self.output = compressed_io
+      when 'application/gzip', 'application/x-gzip', 'application/octet-stream'
+        self.output = io
+      else
+        return false
+    end
+
+    self.save
   end
 
   def computed?
-    ! result_filename.nil?
+    output?
   end
 
   def self.build_with_defaults
@@ -138,21 +130,20 @@ class Simulation < ActiveRecord::Base
   def simulate
     program = ::Yetting.simulation_program
     path = build_result_path
+    output = ""
 
     IO.popen("#{program["call"]} #{program["path"]} #{program["options"]}", 'w+') do |pipe|
       pipe.puts(self.to_json)
       pipe.close_write
 
-      Zlib::GzipWriter.open(path) do |gz|
-        begin
-          gz.write(pipe.read) until pipe.eof?
-        rescue IOError
-          pipe.close_read
-        end
+      begin
+        output << pipe.read until pipe.eof?
+      rescue IOError
+        pipe.close_read
       end
     end
 
-    self.update_column(:result_filename, path.basename.to_s)
+    self.update_attribute(:result, output)
   end
   handle_asynchronously :simulate
 
