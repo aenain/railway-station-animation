@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.11'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -17,6 +17,8 @@ gem 'thin'
 gem 'delayed_job_active_record'
 gem 'cocaine'
 gem 'yettings'
+
+gem 'carrierwave'
 
 # Gems used only for assets and not required
 # in production environments by default.
